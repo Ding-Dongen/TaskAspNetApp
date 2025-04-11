@@ -59,15 +59,32 @@
         
         <div class="form-group">
             <label asp-for="Description"></label>
-            <textarea type="hidden" asp-for="Description" id="descriptionInput" class="form-control desciption-hide"></textarea>
-
+            <div class="toolbar-wrapper">
             <div class="quill-editor editor-wide" data-target="#descriptionInput" data-toolbar="#custom-toolbar"></div>
+                <div id="custom-toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                    </span>
+                    <select class="ql-align">
+                        <option selected></option>         <!-- Left (default) -->
+                        <option value="center"></option>   <!-- Center -->
+                        <option value="right"></option>    <!-- Right -->
+                        <option value="justify"></option>  <!-- Justify -->
+                      </select>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </div>
 
-            <div id="custom-toolbar">
-                <button class="ql-bold"></button>
-                <button class="ql-italic"></button>
-                <button class="ql-underline"></button>
             </div>
+
+            <textarea type="hidden" asp-for="Description" id="descriptionInput" class="form-control desciption-hide"></textarea>
 
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
@@ -86,7 +103,7 @@
             </div>
         </div>
 
-        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+        @if (User.IsAdminOrSuperAdmin())
         {
             <div class="form-group">
                 <label asp-for="StatusId"></label>
@@ -129,7 +146,7 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/create-project.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/project/CreateEditProject.css" asp-append-version="true" />
 }
 
 @section Scripts {

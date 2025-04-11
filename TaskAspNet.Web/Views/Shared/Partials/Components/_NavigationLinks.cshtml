@@ -2,7 +2,7 @@
 
 
 <nav class="navigation-link">
-    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+    @if (User.IsAdminOrSuperAdmin())
     {
         <a class="links @(Context.Request.Path == "/Project/Index" ? "active" : "")" asp-action="Index" asp-controller="Project">
             <i class="fa-duotone fa-solid fa-briefcase"></i>

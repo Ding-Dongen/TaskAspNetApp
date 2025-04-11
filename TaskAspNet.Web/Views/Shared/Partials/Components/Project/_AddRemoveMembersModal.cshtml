@@ -1,6 +1,5 @@
-﻿<div id="addRemoveMemberModal" class="upload-modal-overlay" style="display:none;">
-    <div class="upload-modal-content">
-        <span class="close-modal">&times;</span>
+﻿<div id="addRemoveMemberModal" class="upload-modal-overlay-add" style="display:none;">
+    <div class="upload-modal-content-add">
         <h2>Add/Remove Members</h2>
 
         <form class="form-add-remove" asp-action="UpdateMembers" asp-controller="Project" method="post" onsubmit="return confirm('Save member changes?');">
@@ -8,7 +7,7 @@
 
             <div class="search-bar-add-remove">
                 <label for="modalSearchInput">Search Members:</label>
-                <input type="text" id="modalSearchInput" placeholder="Search members..." class="form-control" autocomplete="off" />
+                <input type="text" id="modalSearchInput" placeholder="Search members..." class="search-bar-add-remove-input" autocomplete="off" />
             </div>
 
             <ul id="modalSearchResults" class="search-results"></ul>
