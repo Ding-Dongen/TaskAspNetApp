@@ -1,0 +1,46 @@
+﻿@model UserLogInForm
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="login-wrapper">
+    <div class="form-container">
+        <h2>Log in</h2>
+        <a class="google-signup" asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google">
+            <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="Google Logo">
+            Log In with Google
+        </a>
+        <p>OR</p>
+        <form asp-action="LogIn" asp-controller="Auth" method="post" novalidate>
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+            <div class="form-login">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" type="email" id="email" placeholder="Your email address">
+                <span class="text-danger" asp-validation-for="Email"></span>
+            </div>
+            <div class="form-login">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" id="password" placeholder="Enter your password">
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            @* <div class="terms">
+                <input asp-for="TermsAndConditions" type="checkbox" id="terms">
+                <label asp-for="TermsAndConditions">I accept <a href="#">Terms and Conditions</a></label>
+                <span class="text-danger" asp-validation-for="TermsAndConditions"></span>
+            </div> *@
+            <button type="submit" class="submit-btn">Log in</button>
+        </form>
+        <p class="login-link">Don´t have an account? <a asp-action="CreateAcc" asp-controller="Auth">Sign Up</a></p>
+    </div>
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth/LogIn.css" asp-append-version="true" />
+}
+
+@* @section Scripts {
+    <script src="~/js/project/CardMenu.js" asp-append-version="true"></script>
+
+} *@

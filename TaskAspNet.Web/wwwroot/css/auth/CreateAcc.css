@@ -1,0 +1,94 @@
+.create-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.form-container {
+    width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: var(--background-color);
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.google-signup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+    .google-signup img {
+        width: 20px;
+        margin-right: 8px;
+    }
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-color);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--Border-100);
+        border-radius: 5px;
+        background-color: var(--input-background);
+    }
+
+.terms {
+    display: flex;
+    align-items: center;
+}
+
+    .terms input {
+        margin-right: 5px;
+    }
+
+    .terms a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+.submit-btn {
+    width: 100%;
+    background-color: var(--Accent);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .submit-btn:hover {
+        background-color: var(--button-hover);
+    }
+
+.login-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+    .login-link a {
+        color: var(--Accent);
+        text-decoration: none;
+    }

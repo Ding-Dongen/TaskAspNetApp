@@ -1,0 +1,124 @@
+﻿@model IEnumerable<AppUser>
+
+    @{
+        ViewData["Title"] = "Manage Users";
+
+        
+        var roleChangedUserId = TempData["RoleChangedUserId"]?.ToString();
+        var deletedUserId = TempData["DeletedUserId"]?.ToString();
+    }
+
+    <h2 class="admin-title">Manage Users</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    bool isDeleted = (deletedUserId != null && user.Id.ToString() == deletedUserId);
+                    bool isRoleChanged = (roleChangedUserId != null && user.Id.ToString() == roleChangedUserId);
+
+                    var rowId = $"row-{user.Id}";
+                    var rowClass = isDeleted ? "deleted-row"
+                    : isRoleChanged ? "role-changed"
+                    : "";
+
+                    <tr id="@rowId" class="@rowClass">
+                        <td>@user.FirstName @user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>
+                            @{
+                                var userRoles = (Dictionary<string, string>)ViewData["UserRoles"];
+                                var userRole = userRoles.ContainsKey(user.Id) ? userRoles[user.Id] : "User";
+                            }
+                            <span class="badge @(userRole == "Admin" ? "admin-badge"
+                                           : userRole == "SuperAdmin" ? "superadmin-badge"
+                                           : "user-badge")">@userRole</span>
+                        </td>
+                        <td>
+                            @if (!isDeleted)
+                            {
+                                if (userRole == "User")
+                                {
+                                    <form asp-action="AssignAdmin" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn make-admin-btn">Make Admin</button>
+                                    </form>
+                                }
+                                else if (userRole == "Admin")
+                                {
+                                    <form asp-action="RemoveAdmin" asp-controller="Admin" method="post">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button type="submit" class="btn remove-admin-btn">Remove Admin</button>
+                                    </form>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @if (!isDeleted && userRole != "SuperAdmin")
+                            {
+                                <form asp-action="DeleteUser" asp-controller="Admin" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn delete-user-btn">Delete User</button>
+                                </form>
+                            }
+                            else if (isDeleted)
+                            {
+                                <span class="text-danger">User Deleted</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Cannot delete SuperAdmin</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @section Scripts {
+        <script>
+              document.addEventListener("DOMContentLoaded", function () {
+            const roleChangedUserId = "@roleChangedUserId";
+            if (roleChangedUserId) {
+                const row = document.getElementById(`row-${roleChangedUserId}`);
+                if (row && row.classList.contains("role-changed")) {
+                    
+                    setTimeout(() => {
+                        row.classList.add("fade-out-role");
+                    }, 3000);
+
+                   
+                    setTimeout(() => {
+                        row.classList.remove("role-changed", "fade-out-role");
+                    }, 5000);
+                }
+            }
+        });
+        </script>
+    }
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin/ManagerUsers.css" asp-append-version="true" />
+}
+

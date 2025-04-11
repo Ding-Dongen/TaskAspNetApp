@@ -1,0 +1,133 @@
+﻿@model TaskAspNet.Business.Dtos.ProjectDto
+
+@{
+    
+    var formAction = Model.Id > 0 ? "Edit" : "Create";
+}
+
+<div class="wrapper-project-form">
+    <form asp-action="@formAction"
+          asp-controller="Project"
+          method="post"
+          enctype="multipart/form-data"
+          id="projectForm">
+
+        @Html.AntiForgeryToken()
+
+       
+        <input type="hidden" asp-for="Id" />
+        
+       
+        <input type="hidden" asp-for="ImageData.CurrentImage" id="hiddenCurrentImage" />
+        <input type="hidden" asp-for="ImageData.SelectedImage" id="hiddenSelectedImage" />
+        <input type="file" asp-for="ImageData.UploadedImage" id="fileInput" style="display: none;" accept="image/*" />
+
+       
+        <div class="form-group">
+            <div class="image-upload" id="openUploadModal">
+                <div class="wrapper-camera">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+            </div>
+
+           
+            <img id="cameraPreview"
+                 src="@(!string.IsNullOrWhiteSpace(Model.ImageData?.CurrentImage)
+                       ? Model.ImageData.CurrentImage
+                       : "/images/default.png")"
+                 alt="Preview"
+                 style="max-width:80px; margin-left:8px;" />
+        </div>
+
+       
+        @await Html.PartialAsync("~/Views/Shared/Partials/Components/_UploadSelectImgModal.cshtml", Model.ImageData)
+
+        
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" required placeholder="Project Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        
+        <div class="form-group">
+            <label asp-for="Client.ClientName">Client Name</label>
+            <input asp-for="Client.ClientName" class="form-control" required placeholder="Client Name" />
+            <span asp-validation-for="Client.ClientName" class="text-danger"></span>
+        </div>
+
+        
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea type="hidden" asp-for="Description" id="descriptionInput" class="form-control desciption-hide"></textarea>
+
+            <div class="quill-editor editor-wide" data-target="#descriptionInput" data-toolbar="#custom-toolbar"></div>
+
+            <div id="custom-toolbar">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+            </div>
+
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        
+        <div class="date-group">
+            <div class="form-group">
+                <label asp-for="StartDate"></label>
+                <input asp-for="StartDate" type="date" class="form-control" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate"></label>
+                <input asp-for="EndDate" type="date" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            <label asp-for="StatusId"></label>
+            <select asp-for="StatusId" class="form-control">
+                <option value="1">Started</option>
+                <option value="2">Completed</option>
+            </select>
+            <span asp-validation-for="StatusId" class="text-danger"></span>
+        </div>
+
+       
+        <div class="form-group">
+            <label asp-for="Budget"></label>
+            <input asp-for="Budget" type="text" class="form-control" required placeholder="$ 0" />
+            <span asp-validation-for="Budget" class="text-danger"></span>
+        </div>
+
+        
+        <div class="form-group">
+            <label>Search Members:</label>
+            <div class="memberSearchContainer">
+                <div id="selectedChipsContainer" class="chips-container"></div>
+                <input type="text"
+                       id="memberSearchInput"
+                       placeholder="Search members..."
+                       class="form-control"
+                       autocomplete="off" />
+            </div>
+            <ul id="memberSearchResults" class="search-results"></ul>
+        </div>
+        <div id="memberInputsContainer"></div>
+
+        
+        <button type="submit" class="btn btn-project-form">Save</button>
+    </form>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/create-project.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/project/CreateEditProject.js" asp-append-version="true"></script>
+    <script src="~/js/member/ModalImg.js" asp-append-version="true"></script>
+}

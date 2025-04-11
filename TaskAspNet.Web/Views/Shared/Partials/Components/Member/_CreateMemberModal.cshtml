@@ -1,0 +1,152 @@
+@model MemberDto
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/member/CreateEditMember.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/member/CreateEditMember.js" asp-append-version="true"></script>
+    <script src="~/js/member/ModalImg.js" asp-append-version="true"></script>
+}
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        user-select: none;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        pointer-events: auto;
+    }
+
+    .modal-header {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .modal-title {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    .modal-body {
+        padding: 10px 0;
+    }
+
+    * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    input, select, textarea {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+</style>
+
+<div id="createMemberModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Complete Your Profile</h5>
+        </div>
+        <div class="modal-body">
+            <div id="createMemberFormContainer">
+                <!-- Re-use your partial that references MemberDto -->
+                @await Html.PartialAsync(
+                         "~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml",
+                         Model
+                         )
+            </div>
+        </div>
+    </div>
+</div>
+@* <script>
+          
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('memberForm');
+        const formContainer = document.getElementById('createMemberFormContainer');
+        const modalId = 'createMemberModal';
+
+        // Prevent accidental close before form is submitted
+        const beforeUnloadHandler = (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        };
+
+        if (form && formContainer) {
+            window.addEventListener('beforeunload', beforeUnloadHandler);
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                try {
+                    const formData = new FormData(form);
+
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const contentType = response.headers.get('content-type');
+
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Clean up
+                            window.removeEventListener('beforeunload', beforeUnloadHandler);
+
+                            // Close modal using global function
+                            closeModal(modalId);
+
+                            // Remove modal from DOM after short delay (for animation, optional)
+                            setTimeout(() => {
+                                const modal = document.getElementById(modalId);
+                                if (modal) {
+                                    modal.remove();
+                                }
+                            }, 300); // Adjust if you use fade animations
+
+                            // Redirect to Member index
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            alert(data.message || 'An unknown error occurred.');
+                        }
+
+                    } else {
+                        // Validation errors: re-render form partial
+                        const html = await response.text();
+                        formContainer.innerHTML = html;
+                    }
+
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    alert('An unexpected error occurred while submitting the form.');
+                }
+            });
+        }
+    });
+</script> *@
+

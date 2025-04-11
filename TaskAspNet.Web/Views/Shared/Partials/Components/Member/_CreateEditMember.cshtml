@@ -1,0 +1,196 @@
+﻿@model MemberDto
+
+@{
+    var formAction = Model.Id > 0 ? "Edit" : "CreateMember";
+}
+
+<div class="wrapper-member-form">
+    <form asp-action="@formAction"
+          asp-controller="Member"
+          method="post"
+          enctype="multipart/form-data"
+          id="memberForm"
+          novalidate>
+
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" id="UserId" name="UserId" value="@Model.UserId" />
+
+
+        <!-- DEBUG: Display UserId on the form (just temporarily) -->
+        @* <span>UserId: @Model.UserId</span> *@
+
+
+        <div class="image-upload-wrapper">
+            <div class="image-upload-container">
+                <div class="image-upload" id="openUploadModal" data-modal="uploadModal">
+                    <div class="upload-preview">
+                        <img id="cameraPreview"
+                             src="@(!string.IsNullOrWhiteSpace(Model.ImageData?.CurrentImage)
+                           ? Model.ImageData.CurrentImage
+                           : "/images/default.png")"
+                             alt="Preview" />
+
+                        <div class="edit-icon">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="ImageData.CurrentImage" id="hiddenCurrentImage" />
+                <input type="hidden" asp-for="ImageData.SelectedImage" id="hiddenSelectedImage" />
+                <input type="file" asp-for="ImageData.UploadedImage" id="fileInput" style="display: none;" accept="image/*" />
+            </div>
+        </div>
+
+
+
+        @await Html.PartialAsync("~/Views/Shared/Partials/Components/_UploadSelectImgModal.cshtml", Model.ImageData)
+
+        <div class="form-group">
+            <div class="input-box">
+                <label asp-for="FirstName">First Name</label>
+                <input asp-for="FirstName" class="form-control" required />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="input-box">
+                <label asp-for="LastName">Last Name</label>
+                <input asp-for="LastName" class="form-control" required />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="JobTitleId">Job Title</label>
+            <select asp-for="JobTitleId" asp-items="@Model.AvailableJobTitles" class="form-control" required>
+                <option value="">-- Choose a Title --</option>
+            </select>
+            <span asp-validation-for="JobTitleId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <div class="row-group">
+                <select asp-for="Day" class="form-control">
+                    @for (int i = 1; i <= 31; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+                <select asp-for="Month" class="form-control">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)</option>
+                    }
+                </select>
+                <select asp-for="Year" class="form-control">
+                    @for (int i = DateTime.Now.Year; i >= 1900; i--)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <button type="button" class="accordion-toggle" data-target="addressesContainer">
+                <i class="fa-solid fa-location-dot"></i> Addresses
+            </button>
+            <div id="addressesContainer" class="accordion-content">
+                <div class="address-actions">
+                    <button type="button" class="btn-add-address" data-type="Home">
+                        <i class="fa-solid fa-plus"></i> Home
+                    </button>
+                    <button type="button" class="btn-add-address" data-type="Work">
+                        <i class="fa-solid fa-plus"></i> Work
+                    </button>
+                    <button type="button" class="btn-add-address" data-type="Other">
+                        <i class="fa-solid fa-plus"></i> Other
+                    </button>
+                </div>
+                <div id="addressesList">
+                    @for (int i = 0; i < Model.Addresses.Count; i++)
+                    {
+                        <div class="address-block" data-type="@Model.Addresses[i].AddressType">
+                            <div class="address-header">
+                                <span class="address-type">@Model.Addresses[i].AddressType</span>
+                                <button type="button" class="btn-remove" onclick="removeThis(this)">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" asp-for="Addresses[@i].AddressType" />
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].Address" class="form-control" placeholder="Street Address" />
+                            </div>
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].ZipCode" class="form-control" placeholder="Zip Code" />
+                            </div>
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].City" class="form-control" placeholder="City" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button type="button" class="accordion-toggle" data-target="phonesContainer">
+                <i class="fa-solid fa-phone"></i> Phones
+            </button>
+            <div id="phonesContainer" class="accordion-content">
+                <div class="phone-actions">
+                    <button type="button" class="btn-add-phone" data-type="Mobile">
+                        <i class="fa-solid fa-plus"></i> Mobile
+                    </button>
+                    <button type="button" class="btn-add-phone" data-type="Home">
+                        <i class="fa-solid fa-plus"></i> Home
+                    </button>
+                    <button type="button" class="btn-add-phone" data-type="Work">
+                        <i class="fa-solid fa-plus"></i> Work
+                    </button>
+                </div>
+                <div id="phonesList">
+                    @for (int i = 0; i < Model.Phones.Count; i++)
+                    {
+                        <div class="phone-block" data-type="@Model.Phones[i].PhoneType">
+                            <div class="phone-header">
+                                <span class="phone-type">@Model.Phones[i].PhoneType</span>
+                                <button type="button" class="btn-remove" onclick="removeThis(this)">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" asp-for="Phones[@i].PhoneType" />
+                            <div class="form-row">
+                                <input asp-for="Phones[@i].Phone" class="form-control" placeholder="Phone Number" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-member-form">Save</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("memberForm").addEventListener("submit", function (e) {
+            console.log("Form submitting to:", e.target.action);
+        });
+    </script>
+    <script src="~/js/member/CreateEditMember.js" asp-append-version="true"></script>
+    @*  <script src="~/js/member/ModalImg.js" asp-append-version="true"></script> *@
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/member/CreateEditMember.css" asp-append-version="true" />
+}

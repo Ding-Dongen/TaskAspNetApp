@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAspNet.Business", "TaskAspNet.Business\TaskAspNet.Business.csproj", "{5DC43754-05CC-4F3B-8F70-717F4A65EF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAspNet.Data", "TaskAspNet.Data\TaskAspNet.Data.csproj", "{DDFCB9DB-6E30-4D00-B9A8-548480A73A33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAspNet.Web", "TaskAspNet.Web\TaskAspNet.Web.csproj", "{EEA8CD69-B56D-4DF8-B88C-9D52577308EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DC43754-05CC-4F3B-8F70-717F4A65EF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DC43754-05CC-4F3B-8F70-717F4A65EF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DC43754-05CC-4F3B-8F70-717F4A65EF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DC43754-05CC-4F3B-8F70-717F4A65EF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDFCB9DB-6E30-4D00-B9A8-548480A73A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDFCB9DB-6E30-4D00-B9A8-548480A73A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDFCB9DB-6E30-4D00-B9A8-548480A73A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDFCB9DB-6E30-4D00-B9A8-548480A73A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA8CD69-B56D-4DF8-B88C-9D52577308EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA8CD69-B56D-4DF8-B88C-9D52577308EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA8CD69-B56D-4DF8-B88C-9D52577308EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA8CD69-B56D-4DF8-B88C-9D52577308EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

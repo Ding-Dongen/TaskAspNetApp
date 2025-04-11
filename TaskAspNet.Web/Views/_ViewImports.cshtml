@@ -1,0 +1,11 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using TaskAspNet.Business.Dtos
+@using TaskAspNet.Data.Models
+@using TaskAspNet.Business.Interfaces
+@using TaskAspNet.Business.Services
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+@inject IMemberService memberService
+@inject INotificationService notificationService
+@inject IProjectService projectService

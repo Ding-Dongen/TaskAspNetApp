@@ -1,0 +1,377 @@
+﻿@{
+    var user = await signInManager.UserManager.GetUserAsync(User);
+    var member = user != null ? await memberService.GetMemberByUserIdAsync(user.Id) : null;
+    var notifications = user != null ? await notificationService.GetNotificationsForUserAsync(user.Id, true) : new List<TaskAspNet.Data.Entities.NotificationEntity>();
+}
+
+<div class="top-bar">
+    <div class="top-bar-left">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </div>
+
+    <div class="top-bar-right">
+        @if (signInManager.IsSignedIn(User))
+        {
+            <div class="top-bar-icons">
+                <div class="notification-container">
+                    <a href="#" class="icon-link" title="Notifications" onclick="toggleNotificationPanel(event)">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+                    </a>
+                    <div id="notificationPanel" class="notification-panel">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button onclick="markAllAsRead()" class="mark-all-read">Mark all as read</button>
+                            <button onclick="clearAllNotifications()" class="mark-all-read">Dismiss all</button>
+                        </div>
+                        <div id="notificationList" class="notification-list">
+                            @if (notifications.Any())
+                            {
+                                @foreach (var notification in notifications.OrderByDescending(n => n.CreatedAt))
+                                {
+                                    ProjectDto? project = null;
+
+                                    if (notification.RelatedEntityType == "Project" && int.TryParse(notification.RelatedEntityId, out var projectId))
+                                    {
+                                        project = await projectService.GetProjectByIdAsync(projectId);
+                                    }
+
+                                    <div class="notification-item @(!notification.IsRead ? "unread" : "")"
+                                         data-id="@notification.Id">
+
+                                        @if (project?.ImageData?.CurrentImage != null)
+                                        {
+                                            <img src="@project.ImageData.CurrentImage" alt="Project Image" class="notification-image" />
+                                        }
+                                        else if (member?.ImageData?.CurrentImage != null)
+                                        {
+                                            <img src="@member.ImageData.CurrentImage" alt="Member Image" class="notification-image" />
+                                        }
+
+                                        <div class="notification-item-message">@notification.Message</div>
+                                        <div class="notification-item-time">@notification.CreatedAt.ToLocalTime().ToString("g")</div>
+
+                                        <button class="delete-notification-btn"
+                                                onclick="deleteNotification(@notification.Id); event.stopPropagation();">
+                                            x
+                                        </button>
+                                    </div>
+                                }
+
+                            }
+                            else
+                            {
+                                <div class="notification-item">
+                                    <div class="notification-item-message">No notifications</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="icon-link" title="Settings" onclick="openModal('settingsModal')">
+                    <i class="fas fa-cog"></i>
+                </a>
+                <a href="#" class="icon-link" title="Profile">
+                    <img src="@(!string.IsNullOrEmpty(member?.ImageData?.CurrentImage) ? member.ImageData.CurrentImage : "/images/membericon/card.png")" alt="Profile" class="profile-image">
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Settings</h2>
+            <span class="close" onclick="closeModal('settingsModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="profile-section">
+                <img src="@(!string.IsNullOrEmpty(member?.ImageData?.CurrentImage) ? member.ImageData.CurrentImage : "/images/membericon/card.png")" alt="Profile" class="modal-profile-image">
+                <h3>@(member?.FirstName ?? "") @(member?.LastName ?? "")</h3>
+            </div>
+            <div class="settings-options">
+                <div class="setting-item">
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Dark Mode</span>
+                </div>
+                <a asp-action="LogOut" asp-controller="Auth" class="logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <script>
+
+
+    async function loadNotifications() {
+        try {
+            const response = await fetch('/api/Notification');
+            if (!response.ok) {
+                throw new Error(`Failed to fetch notifications: ${response.status}`);
+            }
+
+            const notifications = await response.json();
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = '';
+
+            notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(notification => {
+                addNotification(notification);
+            });
+
+            updateNotificationBadge();
+        } catch (err) {
+            console.error("Error loading notifications:", err);
+        }
+    }
+    // Dark mode toggle functionality
+    document.getElementById('darkModeToggle').addEventListener('change', function() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', this.checked);
+    });
+
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').checked = true;
+    }
+
+    // SignalR Connection
+    let connection = null;
+    let unreadCount = 0;
+    let isConnecting = false;
+
+    async function initializeSignalR() {
+        if (isConnecting) return;
+        isConnecting = true;
+
+        try {
+            if (typeof signalR === 'undefined') {
+                console.error("SignalR is not loaded.");
+                isConnecting = false;
+                return;
+            }
+
+            if (connection) {
+                try {
+                    await connection.stop();
+                } catch (err) {
+                    console.warn("Error stopping previous connection:", err);
+                }
+            }
+
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/notificationHub", {
+                    withCredentials: true,
+                    skipNegotiation: false,
+                    transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling
+                })
+                .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            connection.onreconnecting(error => {
+                console.warn("🔄 Reconnecting to SignalR...", error);
+                isConnecting = false;
+            });
+
+            connection.onreconnected(connectionId => {
+                console.log("✅ Reconnected to SignalR. Connection ID:", connectionId);
+                isConnecting = false;
+                loadNotifications();
+            });
+
+            connection.onclose(error => {
+                console.warn("❌ SignalR connection closed.", error);
+                isConnecting = false;
+                if (document.visibilityState === 'visible') {
+                    setTimeout(initializeSignalR, 5000);
+                }
+            });
+
+            connection.on("ReceiveNotification", (notification) => {
+                console.log("📩 New Notification:", notification);
+                addNotification(notification);
+                updateNotificationBadge();
+                document.getElementById('notificationPanel').style.display = 'block';
+            });
+
+            await connection.start();
+            console.log("✅ SignalR Connected. Connection ID:", connection.connectionId);
+            isConnecting = false;
+
+        } catch (err) {
+            console.error("SignalR Connection Error: ", err);
+            isConnecting = false;
+            if (document.visibilityState === 'visible') {
+                setTimeout(initializeSignalR, 5000);
+            }
+        }
+    }
+
+        document.addEventListener('DOMContentLoaded', () => {
+        const badge = document.getElementById('notificationBadge');
+        const savedCount = localStorage.getItem("notificationBadgeCount");
+
+        if (savedCount && parseInt(savedCount) > 0) {
+            badge.textContent = savedCount;
+            badge.style.display = 'block';
+        }
+
+        setTimeout(() => {
+            initializeSignalR();
+            updateNotificationBadge();
+        }, 500); // Shorter timeout for better responsiveness
+    });
+
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && (!connection || connection.state === signalR.HubConnectionState.Disconnected)) {
+            initializeSignalR();
+        }
+    });
+
+    function addNotification(notification) {
+        const notificationList = document.getElementById('notificationList');
+        const existingNotification = document.querySelector(`.notification-item[data-id="${notification.id}"]`);
+        if (existingNotification) {
+            return;
+        }
+        const notificationElement = document.createElement('div');
+        notificationElement.className = `notification-item ${notification.isRead ? '' : 'unread'}`;
+        notificationElement.setAttribute('data-id', notification.id);
+        notificationElement.innerHTML = `
+            <div class="notification-item-title">${notification.title}</div>
+            <div class="notification-item-message">${notification.message}</div>
+            <div class="notification-item-time">${new Date(notification.createdAt).toLocaleString()}</div>
+        `;
+        notificationElement.onclick = () => markAsRead(notification.id);
+        const noNotificationsElement = notificationList.querySelector('.notification-item:not([data-id])');
+        if (noNotificationsElement) {
+            notificationList.removeChild(noNotificationsElement);
+        }
+        notificationList.insertBefore(notificationElement, notificationList.firstChild);
+    }
+
+    async function markAsRead(notificationId) {
+        try {
+            const response = await fetch(`/api/Notification/${notificationId}/read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const notification = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+            if (notification) {
+                notification.classList.remove('unread');
+            }
+            updateNotificationBadge();
+        } catch (err) {
+            console.error("Error marking notification as read: ", err);
+        }
+    }
+
+    async function markAllAsRead() {
+        try {
+            const response = await fetch('/api/Notification/mark-all-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            updateNotificationBadge();
+        } catch (err) {
+            console.error("Error marking all notifications as read: ", err);
+        }
+    }
+
+        function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        const unreadItems = document.querySelectorAll('.notification-item.unread');
+        unreadCount = unreadItems.length;
+
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.style.display = 'block';
+            localStorage.setItem("notificationBadgeCount", unreadCount);
+        } else {
+            badge.style.display = 'none';
+            localStorage.removeItem("notificationBadgeCount");
+        }
+    }
+
+
+    function toggleNotificationPanel(event) {
+        event.preventDefault();
+        const panel = document.getElementById('notificationPanel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', (event) => {
+        const panel = document.getElementById('notificationPanel');
+        const notificationContainer = document.querySelector('.notification-container');
+        if (!notificationContainer.contains(event.target) && panel.style.display === 'block') {
+            panel.style.display = 'none';
+        }
+    });
+
+    // Updated clearAllNotifications function to dismiss all notifications via the proper endpoint.
+    async function clearAllNotifications() {
+        try {
+            const response = await fetch('/api/Notification/dismiss-all', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Remove all notifications from the DOM
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = "";
+            updateNotificationBadge();
+        } catch (err) {
+            console.error("Error dismissing all notifications: ", err);
+        }
+    }
+
+    async function deleteNotification(notificationId) {
+        try {
+            const response = await fetch(`/api/Notification/${notificationId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const notificationEl = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+            if (notificationEl) {
+                notificationEl.remove();
+            }
+            updateNotificationBadge();
+        } catch (err) {
+            console.error("Error dismissing notification: ", err);
+        }
+    }
+</script>
+ *@

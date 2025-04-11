@@ -1,0 +1,98 @@
+﻿@model ProjectDto
+
+@functions {
+    public string GetRemainingTime(DateTime? endDate)
+    {
+        if (!endDate.HasValue)
+            return "Ongoing";
+
+        int daysLeft = (endDate.Value - DateTime.Now).Days;
+
+        if (daysLeft > 7)
+            return $"{daysLeft / 7} weeks left";
+        else if (daysLeft > 0)
+            return $"{daysLeft} days left";
+        else
+            return "Deadline passed";
+    }
+
+    public bool IsUrgent(DateTime? endDate)
+    {
+        if (!endDate.HasValue) return false;
+        return (endDate.Value - DateTime.Now).Days <= 7 && (endDate.Value - DateTime.Now).Days >= 0;
+    }
+}
+
+<div class="card">
+    <div class="card-header">
+        <img src="@Model.ImageData.CurrentImage" alt="Project Logo" />
+        <div class="title">
+            <h6>@Model.Name</h6>
+            <p>@Model.Client?.ClientName</p>
+        </div>
+        <div class="menu-wrapper">
+        <span class="dotes" onclick="toggleMenu(@Model.Id)">••</span>
+
+        <div id="overlay-@Model.Id" class="overlay-menu">
+            <ul>
+                <li class="menu-option">
+                    <a href="javascript:void(0);" onclick="openEditModal(@Model.Id)">
+                            <span class="edit-member"><i class="fa-duotone fa-solid fa-pen"></i>Edit</span>
+                    </a>
+                </li>
+                <li class="menu-option">
+                        <button type="button" onclick="openAddRemoveMemberModal(@Model.Id)">
+                            <span class="add-member"><i class="fa-solid fa-plus-minus"></i> Members</span>
+                    </button>
+                </li>
+                <li class ="menu-option">
+                    <form asp-action="Delete" asp-controller="Project" method="post" tyle="display:inline;" onsubmit="return confirm('Are you sure you want to delete this project?');">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit">
+                                <span class="delete-project"><i class="fa-duotone fa-solid fa-trash"></i>Delete Project</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+
+    <div class="card-content">
+        <p>@Html.Raw(Model.Description)</p>
+    </div>
+
+    <div class="card-footer">
+        <div class="time-badge @(IsUrgent(Model.EndDate) ? "urgent" : "")">
+            <i class="fa-regular fa-clock"></i>
+            <p>@GetRemainingTime(Model.EndDate)</p>
+        </div>
+
+        <div class="avatars">
+            @if (Model.Members != null && Model.Members.Any())
+            {
+                @foreach (var member in Model.Members)
+                {
+                    <img src="@(member.ImageData?.CurrentImage ?? "/images/membericon/default.png")"
+                         alt="@member.FirstName"
+                         title="@member.FirstName @member.LastName" />
+                }
+            }
+            else
+            {
+                <p>No members assigned</p>
+            }
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Views/Shared/Partials/Components/Project/_AddRemoveMembersModal.cshtml", Model.Id)
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/project/ProjectCardModalMenu.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/project/CardMenu.js" asp-append-version="true"></script>
+}
+
