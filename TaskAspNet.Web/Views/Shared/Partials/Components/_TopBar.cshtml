@@ -51,9 +51,10 @@
                                             <img src="@member.ImageData.CurrentImage" alt="Member Image" class="notification-image" />
                                         }
 
+                                        <div class="msg-stamp-wrapper">
                                         <div class="notification-item-message">@notification.Message</div>
-                                        <div class="notification-item-time">@notification.CreatedAt.ToLocalTime().ToString("g")</div>
-
+                                            <div class="notification-item-time">@notification.CreatedAt.ToRelativeTime()</div>
+                                        </div>
                                         <button class="delete-notification-btn"
                                                 onclick="deleteNotification(@notification.Id); event.stopPropagation();">
                                             x
@@ -96,12 +97,13 @@
             </div>
             <div class="settings-options">
                 <div class="setting-item">
+                    <span><i class="fas fa-cog fa-left"></i>Dark Mode</span>
                     <label class="switch">
                         <input type="checkbox" id="darkModeToggle">
                         <span class="slider round"></span>
                     </label>
-                    <span>Dark Mode</span>
                 </div>
+                <hr class="logout-divider" />
                 <a asp-action="LogOut" asp-controller="Auth" class="logout-button">
                     <i class="fas fa-sign-out-alt"></i> Log Out
                 </a>

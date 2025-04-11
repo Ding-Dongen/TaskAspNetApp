@@ -2,13 +2,13 @@
     const openModalBtn = document.getElementById("btnOpenCreateModal");
     const modal = document.getElementById("createMemberModal");
 
-    
+    // Open the modal
     if (openModalBtn && modal) {
         openModalBtn.addEventListener("click", function () {
             openModal("createMemberModal");
         });
     }
-    
+    // add phone and address
     initializeAddressAndPhoneHandlers();
     initializeImageModalHandlers();
 });
@@ -28,7 +28,7 @@ function toggleEditIconBasedOnImage(previewElement, container) {
 
 
 function initializeAddressAndPhoneHandlers() {
-    
+    // Address handlers
     document.querySelectorAll('.btn-add-address').forEach(button => {
         button.addEventListener('click', function () {
             const type = this.dataset.type;
@@ -36,7 +36,7 @@ function initializeAddressAndPhoneHandlers() {
         });
     });
 
-    
+    // Phone handlers
     document.querySelectorAll('.btn-add-phone').forEach(button => {
         button.addEventListener('click', function () {
             const type = this.dataset.type;
@@ -53,14 +53,14 @@ function initializeAccordionHandlers() {
             const targetId = button.getAttribute("data-target");
             const target = document.getElementById(targetId);
 
-            
+            // Close other panels
             document.querySelectorAll(".accordion-content").forEach(panel => {
                 if (panel !== target) {
                     panel.style.display = "none";
                 }
             });
 
-            
+            // Toggle current
             if (target.style.display === "block") {
                 target.style.display = "none";
             } else {
@@ -144,7 +144,7 @@ function closeModal(modalId) {
 
 /*Edit member modal*/
 function openEditModal(memberId) {
-    
+    // 1. Make an AJAX/fetch call to retrieve the Edit form
     fetch(`/Member/Edit/${memberId}`, {
         method: "GET",
         headers: {
@@ -158,15 +158,15 @@ function openEditModal(memberId) {
             return response.text();
         })
         .then(html => {
-            
+            // 2. Load the returned HTML into #editMemberContainer
             document.getElementById("editMemberContainer").innerHTML = html;
 
-            
+            // 3. Show the modal
             openModal("editMemberModal");
 
-           
+            // 4. Initialize modal handlers for the edit form
             initializeImageModalHandlers();
-            initializeAccordionHandlers(); 
+            initializeAccordionHandlers();  // ← IMPORTANT
             initializeAddressAndPhoneHandlers();
         })
         .catch(error => {
@@ -186,13 +186,14 @@ function initializeImageModalHandlers() {
     const selectImage = document.getElementById("selectImage");
     const saveBtn = document.getElementById("saveImageSelection");
 
-   
+    // Open modal handler
     if (openUploadModalBtn && uploadModal) {
         openUploadModalBtn.addEventListener("click", function () {
             openModal("uploadModal");
         });
     }
 
+    // File upload handler
     if (triggerFileInput && fileInput && imagePreview) {
         triggerFileInput.addEventListener("click", function () {
             fileInput.click();
@@ -215,6 +216,7 @@ function initializeImageModalHandlers() {
         });
     }
 
+    // Predefined image selection handler
     if (selectImage && imagePreview) {
         selectImage.addEventListener("change", function () {
             const selected = this.value;
@@ -233,6 +235,7 @@ function initializeImageModalHandlers() {
         });
     }
 
+    // Save selection handler
     if (saveBtn && imagePreview) {
         saveBtn.addEventListener("click", function () {
             const chosenSrc = imagePreview.src;
@@ -261,6 +264,7 @@ function initializeImageModalHandlers() {
     }
 }
 
+// -- OPEN UPLOAD MODAL --
 const openUploadModalBtn = document.getElementById("openUploadModal");
 const uploadModal = document.getElementById("uploadModal");
 const closeModalBtn = uploadModal?.querySelector(".close-modal");
@@ -271,18 +275,21 @@ if (openUploadModalBtn && uploadModal) {
     });
 }
 
+// -- CLOSE MODAL WITH 'X' --
 if (closeModalBtn) {
     closeModalBtn.addEventListener("click", function () {
         uploadModal.style.display = "none";
     });
 }
 
+// -- CLOSE MODAL WHEN CLICKING OUTSIDE --
 window.addEventListener("click", function (event) {
     if (event.target === uploadModal) {
         uploadModal.style.display = "none";
     }
 });
 
+// -- CHOOSE FILE & PREVIEW --
 const triggerFileInput = document.getElementById("triggerFileInput");
 const fileInput = document.getElementById("fileInput");
 const imagePreview = document.getElementById("imagePreview");
@@ -300,10 +307,10 @@ if (triggerFileInput && fileInput && imagePreview) {
             reader.onload = function (e) {
                 imagePreview.src = e.target.result;
                 if (hiddenCurrentImage) {
-                    hiddenCurrentImage.value = ""; 
+                    hiddenCurrentImage.value = ""; // Clear current image when uploading new one
                 }
                 if (hiddenSelectedImage) {
-                    hiddenSelectedImage.value = ""; 
+                    hiddenSelectedImage.value = ""; // Clear selected image when uploading new one
                 }
             };
             reader.readAsDataURL(this.files[0]);
@@ -311,6 +318,7 @@ if (triggerFileInput && fileInput && imagePreview) {
     });
 }
 
+// -- SELECT PREDEFINED IMAGE --
 const selectImage = document.getElementById("selectImage");
 if (selectImage && imagePreview) {
     selectImage.addEventListener("change", function () {
@@ -321,7 +329,9 @@ if (selectImage && imagePreview) {
                 hiddenSelectedImage.value = selected;
             }
             if (hiddenCurrentImage) {
-                hiddenCurrentImage.value = ""; 
+                hiddenCurrentImage.value = ""; // Clear current image when selecting predefined
+            }
+            // Clear file input when selecting predefined image
             if (fileInput) {
                 fileInput.value = "";
             }
@@ -340,13 +350,16 @@ if (saveBtn && imagePreview) {
             cameraPreview.src = chosenSrc;
         }
 
+        // Update hidden fields based on selection type
         if (hiddenCurrentImage) {
             if (chosenSrc.startsWith("data:")) {
+                // For uploaded files (data URLs)
                 hiddenCurrentImage.value = chosenSrc;
                 if (hiddenSelectedImage) {
                     hiddenSelectedImage.value = "";
                 }
             } else if (chosenSrc.includes("/membericon/")) {
+                // For predefined images
                 hiddenCurrentImage.value = chosenSrc;
                 if (hiddenSelectedImage) {
                     hiddenSelectedImage.value = chosenSrc.split("/membericon/")[1];
@@ -354,6 +367,7 @@ if (saveBtn && imagePreview) {
             }
         }
 
+        // Close modal
         if (uploadModal) {
             uploadModal.style.display = "none";
         }
@@ -365,9 +379,9 @@ document.addEventListener("DOMContentLoaded", function () {
         memberForm.addEventListener("submit", function (e) {
             const userId = document.getElementById("UserId")?.value;
             const id = document.getElementById("Id")?.value;
-            console.log("Submitting Member Form:");
-            console.log("Id:", id);
-            console.log("UserId:", userId);
+            console.log("📦 Submitting Member Form:");
+            console.log("➡️ Id:", id);
+            console.log("➡️ UserId:", userId);
         });
     }
 });
