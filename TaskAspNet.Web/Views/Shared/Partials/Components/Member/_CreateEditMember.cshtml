@@ -48,11 +48,13 @@
 
 
         @await Html.PartialAsync("~/Views/Shared/Partials/Components/_UploadSelectImgModal.cshtml", Model.ImageData)
-
-        <div class="form-group">
+            <div class="form-group">
             <div class="input-box">
                 <label asp-for="FirstName">First Name</label>
-                <input asp-for="FirstName" class="form-control" required />
+                <div class ="input-wrapper">
+                    <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                <input asp-for="FirstName" class="form-control" placeholder="Your first name" required />
+                </div>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="input-box">
@@ -64,7 +66,7 @@
 
         <div class="form-group">
             <label asp-for="Email">Email</label>
-            <input asp-for="Email" class="form-control" required />
+            <input asp-for="Email" class="form-control" placeholder="Your email address" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
@@ -174,6 +176,7 @@
                     }
                 </div>
             </div>
+        
         </div>
 
 

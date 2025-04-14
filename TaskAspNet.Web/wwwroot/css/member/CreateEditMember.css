@@ -7,6 +7,39 @@
    
 }
 
+.input-wrapper {
+    position: relative;
+
+}
+
+    .input-wrapper .error-icon {
+        position: absolute;
+        right: -3%;
+        top: 34%;
+        transform: translateY(-50%);
+        background: #ff8c8c;
+        padding: 0.5rem;
+        border-radius: 10px;
+        color: red;
+        font-size: 1rem;
+        display: none;
+        pointer-events: none;
+    }
+
+.input-error {
+    border-color: red;
+}
+
+    .input-error + .error-icon {
+        display: block;
+    }
+
+.error-message {
+    color: red;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
 
 
 /* Image Upload Styles */
@@ -100,6 +133,7 @@
 }
 
 
+
 /* Form Labels & Inputs */
 .form-group {
     display: flex;
@@ -111,7 +145,7 @@
 .form-group label {
     font-weight: 600;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--Heading);
 }
 
 .form-group input,
@@ -121,7 +155,7 @@
     border: 1px solid #ccc;
     font-size: 14px;
     border-radius: 8px;
-    background: white;
+    background: var(--Surface);
 }
 
 .name-group {
@@ -140,6 +174,10 @@
 .row-group .input-box {
     flex: 1;
     min-width: 0;
+}
+
+.form-control {
+    color: var(--Heading);
 }
 
 
@@ -176,30 +214,37 @@
     background-color: #1669d8;
 }
 
+
+
 /* Modal Styles */
-.upload-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+.create-upload-modal-overlay {
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10001;
 }
 
+.upload-modal-overlay {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 50%;
+}
 
-
-.upload-modal-content {
-    background: white;
-    padding: 2rem;
+.create-modal-content {
+    background: var(--Surface);
+    color: var(--Heading);
+    padding: 1rem;
     border-radius: 12px;
-    width: 90%;
+    width: 100%;
     max-width: 500px;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.upload-modal-content {
+   
 }
 
 .close-modal {
@@ -208,7 +253,6 @@
     right: 1rem;
     cursor: pointer;
     font-size: 1.5rem;
-    color: #666;
 }
 
 .close-modal:hover {
@@ -222,6 +266,82 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.img-modal {
+    background: var(--Surface);
+    color: var(--Heading);
+    padding: 1rem;
+    border: 1px solid #fff;
+    border-radius: 12px;
+    width: 100%;
+    height: 45%;
+    max-width: 600px;
+    position: absolute;
+}
+
+.img-content {
+    padding: 1rem;
+    max-width: 600px;
+}
+
+    .img-content h3 {
+        padding: 1rem;
+    }
+
+.img-content label {
+    background: var(--Surface);
+    color: var(--Heading);
+}
+
+    .img-content input {
+        background: var(--Surface);
+        color: var(--Heading);
+    }
+
+.btn-primary {
+    width: 30%;
+    background-color: var(--Accent);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 1rem 0 1rem 0;
+}
+
+    .btn-primary:hover {
+        background: var(--Accent-Hover);
+    }
+
+.edit-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+
+.edit-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--Surface);
+    color: var(--Heading);
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+
 
 /* General block styles */
 .address-block,
@@ -275,6 +395,7 @@
         padding: 10px;
         border-radius: 6px;
         border: 1px solid #ccc;
+        background: var(--Surface);
     }
 
 /* Add control section */
@@ -333,7 +454,8 @@
 .accordion-content {
     display: none;
     padding: 10px 15px;
-    background: #fafafa;
+    background: var(--Surface);
+    border: 1px solid #fff;
     margin-bottom: 10px;
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -347,130 +469,6 @@
         opacity: 1;
     }
 }
-
-
-/*Memeber search container*/
-
-/* create-project-chips.css */
-
-/*.error {
-    color: red;
-}
-
-.memberSearchContainer {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    border: 1px solid #ccc;
-    padding: 4px;
-    border-radius: 4px;
-    margin-top: 6px;
-    margin-bottom: 8px;
-    width: 100%;
-}
-
-.chips-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.memberSearchContainer input {
-    border: none;
-    outline: none;
-    flex: 1;
-    min-width: 120px;
-}
-
-#memberSearchResults {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    max-height: 120px;
-    overflow-y: auto;
-}
-
-    #memberSearchResults li {
-        padding: 4px 8px;
-        cursor: pointer;
-    }
-
-        #memberSearchResults li:hover {
-            background-color: #f0f0f0;
-        }
-
-.chip {
-    background-color: var(--Grey-300);
-    border-radius: 16px;
-    padding: 4px 8px;
-    display: inline-flex;
-    align-items: center;
-    margin-right: 4px;
-}
-
-    .chip .remove-x {
-        margin-left: 6px;
-        cursor: pointer;
-        font-weight: bold;
-    }*/
-
-
-/*modal for images*/
-
-/*.image-upload {
-    width: 100px;
-    height: 100px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin: 0 auto 15px;*/
-    /*display: inline-block;*/
-/*}
-
-
-.image-upload {
-    width: 100px;
-    height: 100px;
-    border: 1px dashed var(--Border-300);
-    border-radius: 1.875rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin: 0 auto 15px;
-}
-
-.wrapper-camera {
-    border: 20px solid #ccc;
-    border-radius: 50%;
-    background-color: rgba(51, 51, 51, 0.70);
-}
-
-.image-upload i {
-    font-size: 15px;
-    color: #888;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-.upload-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}*/
 
 /* Address and Phone Actions */
 .address-actions,
@@ -488,9 +486,10 @@
     padding: 0.5rem 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    background: #fff;
+    background: var(--Surface);
     cursor: pointer;
     transition: all 0.2s ease;
+    color: var(--Heading);
 }
 
 .btn-add-address:hover,
@@ -502,11 +501,12 @@
 /* Address and Phone Blocks */
 .address-block,
 .phone-block {
-    background: #f8f9fa;
+    background: var(--Surface);
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 1rem;
     margin-bottom: 1rem;
+
 }
 
 .address-header,
@@ -520,21 +520,21 @@
 .address-type,
 .phone-type {
     font-weight: 600;
-    color: #495057;
+    color: var(--Heading);
 }
 
 .btn-remove {
     background: none;
     border: none;
-    color: #dc3545;
+    color: var(--Heading);
     cursor: pointer;
     padding: 0.25rem;
     transition: color 0.2s ease;
 }
 
-.btn-remove:hover {
-    color: #c82333;
-}
+    .btn-remove:hover {
+        color: var(--Hover-project-card);
+    }
 
 .form-row {
     margin-bottom: 0.75rem;

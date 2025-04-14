@@ -11,24 +11,24 @@
 
 <style>
     .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000;
+        z-index: 999;
         user-select: none;
     }
 
     .modal-content {
-        background-color: white;
         padding: 20px;
         border-radius: 5px;
-        max-width: 800px;
+        max-width: 500px;
         width: 90%;
         max-height: 90vh;
         overflow-y: auto;
@@ -66,8 +66,8 @@
     }
 </style>
 
-<div id="createMemberModal" class="modal-overlay">
-    <div class="modal-content">
+<div id="createMemberModal" class="modal-overlay create-upload-modal-overlay">
+    <div class="modal-content create-modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Complete Your Profile</h5>
         </div>

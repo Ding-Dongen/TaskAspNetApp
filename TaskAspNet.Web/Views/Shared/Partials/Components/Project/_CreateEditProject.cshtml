@@ -1,4 +1,4 @@
-﻿@model TaskAspNet.Business.Dtos.ProjectDto
+﻿@model ProjectDto
 
 @{
     
@@ -35,7 +35,7 @@
                  src="@(!string.IsNullOrWhiteSpace(Model.ImageData?.CurrentImage)
                        ? Model.ImageData.CurrentImage
                        : "/images/default.png")"
-                 alt="Preview"
+                 alt=""
                  style="max-width:80px; margin-left:8px;" />
         </div>
 
@@ -67,12 +67,7 @@
                         <button class="ql-italic"></button>
                         <button class="ql-underline"></button>
                     </span>
-                    <select class="ql-align">
-                        <option selected></option>         <!-- Left (default) -->
-                        <option value="center"></option>   <!-- Center -->
-                        <option value="right"></option>    <!-- Right -->
-                        <option value="justify"></option>  <!-- Justify -->
-                      </select>
+
                     <span class="ql-formats">
                         <button class="ql-list" value="ordered"></button>
                         <button class="ql-list" value="bullet"></button>

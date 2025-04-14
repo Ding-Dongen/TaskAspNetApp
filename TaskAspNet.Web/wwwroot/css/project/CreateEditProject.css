@@ -66,7 +66,7 @@
 
 .btn-project-form {
     width: 100%;
-    background-color: #1a73e8;
+    background-color: var(--Accent);
     color: white;
     border: none;
     padding: 8px;
@@ -76,6 +76,9 @@
     margin-top: 1rem;
 }
 
+    .btn-project-form:hover {
+        background: var(--Accent-Hover);
+    }
 /* Create Project Modal Styles */
 /*.upload-modal-overlay {
     display: none;
@@ -114,7 +117,6 @@
 .close-modal:hover {
     color: #333;
 }*/
-
 .error {
     color: red;
     font-size: 0.85rem;
@@ -210,19 +212,46 @@
     align-items: center;
 }
 
+.img-modal {
+    background: var(--Surface);
+    color: var(--Heading);
+    
+}
+
+.img-content {
+    padding: 1rem;
+    max-width: 550px;
+}
+
+.img-content h3 {
+    padding: 1rem;
+}
+
+.btn-primary {
+    width: 30%;
+    background-color: var(--Accent);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 1rem 0 1rem 0;
+}
+
+.btn-primary:hover {
+    background: var(--Accent-Hover);   
+}
+/*quill*/
 .editor-wide {
-    width: 100%; 
-    max-width: 1000px; 
+    width: 100%;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 .desciption-hide {
     display: none;
 }
-
-
-/*quill*/
-
 
 #custom-toolbar {
     border: 1px solid #ccc;

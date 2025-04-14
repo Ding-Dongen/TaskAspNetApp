@@ -385,3 +385,84 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("memberForm");
+
+    const fields = [
+        {
+            el: form.querySelector("[name='FirstName']"),
+            validate: val => val.trim().length > 0,
+            message: "First Name is required."
+        },
+        {
+            el: form.querySelector("[name='LastName']"),
+            validate: val => val.trim().length > 0,
+            message: "Last Name is required."
+        },
+        {
+            el: form.querySelector("[name='Email']"),
+            validate: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+            message: "Enter a valid email address."
+        },
+        {
+            el: form.querySelector("[name='JobTitleId']"),
+            validate: val => val.trim().length > 0,
+            message: "Job Title is required."
+        }
+    ];
+
+    function showError(el, message) {
+        el.classList.add("input-error");
+
+        const icon = el.parentNode.querySelector(".error-icon");
+        if (icon) icon.style.display = "block";
+
+        let msg = el.parentNode.querySelector(".error-message");
+        if (!msg) {
+            msg = document.createElement("div");
+            msg.className = "error-message";
+            el.parentNode.appendChild(msg);
+        }
+
+        msg.textContent = message;
+    }
+
+    function clearError(el) {
+        el.classList.remove("input-error");
+
+        const icon = el.parentNode.querySelector(".error-icon");
+        if (icon) icon.style.display = "none";
+
+        const msg = el.parentNode.querySelector(".error-message");
+        if (msg) msg.remove();
+    }
+
+    fields.forEach(field => {
+        field.el.addEventListener("input", () => {
+            if (field.validate(field.el.value)) {
+                clearError(field.el);
+            } else {
+                showError(field.el, field.message);
+            }
+        });
+    });
+
+    form.addEventListener("submit", function (e) {
+        let hasError = false;
+
+        fields.forEach(field => {
+            if (!field.validate(field.el.value)) {
+                showError(field.el, field.message);
+                hasError = true;
+            } else {
+                clearError(field.el);
+            }
+        });
+
+        if (hasError) {
+            e.preventDefault();
+        }
+    });
+});

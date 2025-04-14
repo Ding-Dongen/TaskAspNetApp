@@ -13,6 +13,7 @@
     --Color-basic-white: #ffffff;
     --Heading: #1A1926;
     --Accent: #2D99FF;
+    --Accent-Hover: #61b3ff;
     --Surface: #FFF;
     --Surface-2: #1C1D1F;
     --Basic-White: #ffffff;
@@ -335,7 +336,6 @@ p {
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
 }
 
     .modal-header h2 {
