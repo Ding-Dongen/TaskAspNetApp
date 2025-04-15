@@ -35,7 +35,7 @@ public class FileService : IFileService
         }
         else if (!string.IsNullOrEmpty(imageData.SelectedImage))
         {
-            return imageData.SelectedImage;
+            return $"/images/predefined/{imageData.SelectedImage}";
         }
 
 

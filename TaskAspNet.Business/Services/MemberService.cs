@@ -59,6 +59,11 @@ public class MemberService(IMemberRepository memberRepository, INotificationServ
 
         await _memberRepository.SaveAsync();
 
+        await _notificationService.NotifyMemberUpdatedAsync(
+       memberName: $"{existingEntity.FirstName} {existingEntity.LastName}",
+       updatedByUserId: memberDto.UserId 
+   );
+
         return MemberFactory.CreateDto(existingEntity);
     }
 

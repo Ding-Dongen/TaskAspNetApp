@@ -58,6 +58,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
 });
 
+// Remove before start up otherwise you get ArgumentNullException: Value cannot be null. (Parameter 'ClientId')
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

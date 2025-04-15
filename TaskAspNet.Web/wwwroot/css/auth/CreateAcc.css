@@ -7,16 +7,17 @@
 }
 
 .form-container {
-    width: 350px;
+    width: 37.5rem;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     background-color: var(--background-color);
+    padding: 4rem 2rem 1.5rem 2rem;
 }
 
 h2 {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     color: var(--text-color);
 }
 
@@ -26,25 +27,54 @@ h2 {
     justify-content: center;
     border: 1px solid var(--border-color);
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 0.875rem;
     cursor: pointer;
     margin-bottom: 10px;
+    background-color: var(--Grey-100);
+    text-decoration: none;
 }
+
+    .google-signup span {
+        flex-grow: 1;
+        text-align: center;
+        font-size: 0.9375rem;
+    }
 
     .google-signup img {
         width: 20px;
-        margin-right: 8px;
     }
+
+.or-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 25px 0;
+    color: var(--Body-Light);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+    .or-separator hr {
+        flex: 1;
+        height: 1px;
+        background-color: var(--Border-100);
+        border: none;
+    }
+
 
 .form-group {
     text-align: left;
     margin-bottom: 15px;
+
 }
 
     .form-group label {
         display: block;
         margin-bottom: 5px;
         color: var(--text-color);
+        font-size: 0.9375rem;
+        
     }
 
     .form-group input {
@@ -55,9 +85,43 @@ h2 {
         background-color: var(--input-background);
     }
 
+.input-wrapper {
+    position: relative;
+    height: 44px;
+}
+
+    .input-wrapper input {
+        width: 100%;
+        padding-right: 3rem;
+    }
+
+
+.toggle-password {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000000;
+    z-index: 2;
+}
+
+
+.error-icon {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d33;
+    display: none; 
+    z-index: 2;
+}
+
+
 .terms {
     display: flex;
     align-items: center;
+    margin: 2rem 0 1rem 0;
 }
 
     .terms input {
@@ -74,17 +138,17 @@ h2 {
     background-color: var(--Accent);
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.875rem;
     cursor: pointer;
 }
 
     .submit-btn:hover {
-        background-color: var(--button-hover);
+        background-color: var(--Accent-Hover);
     }
 
 .login-link {
-    margin-top: 10px;
+    margin-top: 3rem;
     font-size: 14px;
 }
 

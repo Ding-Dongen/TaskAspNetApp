@@ -95,14 +95,14 @@ namespace TaskAspNet.Web.Controllers
                 return View(form);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, form.RememberMe, false);
 
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(form.Email);
                 var roles = await _userManager.GetRolesAsync(user);
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, isPersistent: form.RememberMe);
 
                 string redirectUrl;
 

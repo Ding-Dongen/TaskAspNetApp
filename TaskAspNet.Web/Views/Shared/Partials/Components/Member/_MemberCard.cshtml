@@ -57,7 +57,17 @@
         </div>
     </div>
 
-    <div id="detailsModal-@Model.Id" class="upload-modal-overlay" style="display: none;">
+
+    <div id="editMemberModal-@Model.Id" class="upload-modal-overlay" style="display: none;">
+        <div class="upload-modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="editMemberContainer-@Model.Id">
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="detailsModal-@Model.Id" class="upload-modal-overlay details-modal-overlay" style="display: none;">
         <div class="upload-modal-content details-modal">
             <span class="close-modal">&times;</span>
             <div class="details-header">
@@ -141,16 +151,6 @@
             </div>
         </div>
     </div>
-
-    <div id="editMemberModal-@Model.Id" class="upload-modal-overlay" style="display: none;">
-        <div class="upload-modal-content">
-            <span class="close-modal">&times;</span>
-            <div id="editMemberContainer-@Model.Id">
-                
-            </div>
-        </div>
-    </div>
-</div>
 
 
 

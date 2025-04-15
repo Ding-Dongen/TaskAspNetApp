@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Open any modal with [data-modal="modalId"]
     document.querySelectorAll("[data-modal]").forEach(button => {
         button.addEventListener("click", function () {
             const modalId = this.getAttribute("data-modal");
@@ -62,7 +61,7 @@ function initializeQuillEditors() {
             quill.root.innerHTML = hiddenInput.value;
         }
 
-        // ✅ Attach form submit listener scoped to this editor only
+        
         const form = editorEl.closest("form");
         if (form) {
             form.addEventListener("submit", function () {
@@ -120,35 +119,35 @@ async function initializeSignalR() {
             .build();
 
         connection.onreconnecting(err => {
-            console.warn("🔄 Reconnecting...", err);
+            console.warn("Reconnecting...", err);
             isConnecting = false;
         });
 
         connection.onreconnected(id => {
-            console.log("✅ Reconnected with ID:", id);
+            console.log("Reconnected with ID:", id);
             isConnecting = false;
             loadNotifications();
         });
 
         connection.onclose(err => {
-            console.warn("❌ SignalR closed", err);
+            console.warn("SignalR closed", err);
             isConnecting = false;
             setTimeout(initializeSignalR, 5000);
         });
 
         connection.on("ReceiveNotification", notification => {
-            console.log("📩 New notification:", notification);
+            console.log("New notification:", notification);
             addNotification(notification);
             updateNotificationBadge();
             document.getElementById('notificationPanel').style.display = 'block';
         });
 
         await connection.start();
-        console.log("✅ SignalR connected:", connection.connectionId);
+        console.log("SignalR connected:", connection.connectionId);
         isConnecting = false;
 
     } catch (err) {
-        console.error("🚨 SignalR error:", err);
+        console.error("SignalR error:", err);
         isConnecting = false;
         setTimeout(initializeSignalR, 5000);
     }
@@ -289,3 +288,152 @@ function setupOutsideClickClose() {
         }
     });
 }
+
+
+// form validation
+
+document.addEventListener("DOMContentLoaded", function () {
+    const forms = document.querySelectorAll("form[data-validate='true']");
+
+    forms.forEach(form => {
+        const fields = form.querySelectorAll("[data-validate-rule]");
+
+        fields.forEach(field => {
+            const wrapper = field.closest(".input-wrapper");
+            const errorIcon = wrapper?.querySelector(".error-icon");
+            let touched = false;
+
+            const validateField = () => {
+                const rule = field.getAttribute("data-validate-rule");
+                const value = field.value.trim();
+                let isValid = true;
+
+                switch (rule) {
+                    case "required":
+                        isValid = value !== "";
+                        break;
+                    case "email":
+                        isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                        break;
+                    case "number":
+                        isValid = !isNaN(value) && value !== "";
+                        break;
+                    case "password":
+                        isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value);
+                        break;
+                    case "confirm-password":
+                        const passwordInput = form.querySelector("input[data-validate-rule='password']");
+                        isValid = value === passwordInput?.value.trim();
+                        break;
+                    default:
+                        break;
+                }
+
+                if (!isValid && (touched || rule === "email" || rule === "confirm-password")) {
+                    field.classList.add("input-error");
+                    if (errorIcon) errorIcon.style.display = "block";
+
+                    let msg = wrapper.querySelector(".error-message");
+                    if (!msg) {
+                        msg = document.createElement("div");
+                        msg.className = "error-message";
+                        wrapper.appendChild(msg);
+                    }
+                    msg.textContent = field.getAttribute("data-validate-message");
+                } else {
+                    field.classList.remove("input-error");
+                    if (errorIcon) errorIcon.style.display = "none";
+
+                    const msg = wrapper.querySelector(".error-message");
+                    if (msg) msg.remove();
+                }
+            };
+
+            field.addEventListener("input", () => {
+                if (field.value.trim() !== "") touched = true;
+                validateField();
+            });
+
+            field.addEventListener("blur", () => {
+                touched = true;
+                validateField();
+            });
+        });
+
+        form.addEventListener("submit", e => {
+            let hasError = false;
+
+            const fields = form.querySelectorAll("[data-validate-rule]");
+            fields.forEach(field => {
+                const wrapper = field.closest(".input-wrapper");
+                const errorIcon = wrapper?.querySelector(".error-icon");
+
+                const rule = field.getAttribute("data-validate-rule");
+                const value = field.value.trim();
+                let isValid = true;
+
+                switch (rule) {
+                    case "required":
+                        isValid = value !== "";
+                        break;
+                    case "email":
+                        isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                        break;
+                    case "number":
+                        isValid = !isNaN(value) && value !== "";
+                        break;
+                    case "password":
+                        isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value);
+                        break;
+                    case "confirm-password":
+                        const passwordInput = form.querySelector("input[data-validate-rule='password']");
+                        isValid = value === passwordInput?.value.trim();
+                        break;
+                    default:
+                        break;
+                }
+
+                if (!isValid) {
+                    field.classList.add("input-error");
+                    if (errorIcon) errorIcon.style.display = "block";
+
+                    let msg = wrapper.querySelector(".error-message");
+                    if (!msg) {
+                        msg = document.createElement("div");
+                        msg.className = "error-message";
+                        wrapper.appendChild(msg);
+                    }
+                    msg.textContent = field.getAttribute("data-validate-message");
+                    hasError = true;
+                } else {
+                    field.classList.remove("input-error");
+                    if (errorIcon) errorIcon.style.display = "none";
+
+                    const msg = wrapper.querySelector(".error-message");
+                    if (msg) msg.remove();
+                }
+            });
+
+            if (hasError) e.preventDefault();
+        });
+    });
+});
+
+
+
+// toogle password visibility
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleIcon = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+
+    if (toggleIcon && passwordInput) {
+        toggleIcon.addEventListener("click", () => {
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
+            toggleIcon.classList.toggle("fa-eye");
+            toggleIcon.classList.toggle("fa-eye-slash");
+        });
+    }
+});

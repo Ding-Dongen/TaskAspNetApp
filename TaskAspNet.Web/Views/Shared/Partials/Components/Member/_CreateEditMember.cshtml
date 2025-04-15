@@ -10,6 +10,8 @@
           method="post"
           enctype="multipart/form-data"
           id="memberForm"
+          data-validate="true"
+          class="member-form-class"
           novalidate>
 
         @Html.AntiForgeryToken()
@@ -29,14 +31,19 @@
                     <div class="upload-preview">
                         <img id="cameraPreview"
                              src="@(!string.IsNullOrWhiteSpace(Model.ImageData?.CurrentImage)
-                           ? Model.ImageData.CurrentImage
-                           : "/images/default.png")"
+                             ? Model.ImageData.CurrentImage
+                             : "/images/default.png")"
                              alt="Preview" />
+
+                        <div class="wrapper-camera" id="cameraOverlay">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
 
                         <div class="edit-icon">
                             <i class="fa-solid fa-pen"></i>
                         </div>
                     </div>
+
                 </div>
 
                 <input type="hidden" asp-for="ImageData.CurrentImage" id="hiddenCurrentImage" />
@@ -48,34 +55,56 @@
 
 
         @await Html.PartialAsync("~/Views/Shared/Partials/Components/_UploadSelectImgModal.cshtml", Model.ImageData)
-            <div class="form-group">
+        <div class="form-group name-group">
             <div class="input-box">
                 <label asp-for="FirstName">First Name</label>
-                <div class ="input-wrapper">
+                <div class="input-wrapper">
+                    <input asp-for="FirstName"
+                           class="form-control"
+                           placeholder="Your first name"
+                           required
+                           data-validate-rule="required"
+                           data-validate-message="First name is required." />
                     <i class="fa-solid fa-triangle-exclamation error-icon"></i>
-                <input asp-for="FirstName" class="form-control" placeholder="Your first name" required />
                 </div>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
+
             <div class="input-box">
                 <label asp-for="LastName">Last Name</label>
-                <input asp-for="LastName" class="form-control" required />
+                <div class="input-wrapper">
+                    <input asp-for="LastName"
+                           class="form-control"
+                           required
+                           data-validate-rule="required"
+                           data-validate-message="Last name is required." />
+                    <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                </div>
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
         </div>
 
+
         <div class="form-group">
             <label asp-for="Email">Email</label>
-            <input asp-for="Email" class="form-control" placeholder="Your email address" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="input-wrapper">
+                <input asp-for="Email" class="form-control" placeholder="Your email address" required
+                           data-validate-rule="email"
+                       data-validate-message="Enter a valid email ex. (example@example.ca)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="form-group">
             <label asp-for="JobTitleId">Job Title</label>
-            <select asp-for="JobTitleId" asp-items="@Model.AvailableJobTitles" class="form-control" required>
+            <div class="input-wrapper">
+                <select asp-for="JobTitleId" asp-items="@Model.AvailableJobTitles" class="form-control" required data-validate-rule="required"
+                        data-validate-message="Title is required.">
                 <option value="">-- Choose a Title --</option>
             </select>
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
             <span asp-validation-for="JobTitleId" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="form-group">

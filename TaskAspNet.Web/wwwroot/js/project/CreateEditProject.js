@@ -6,10 +6,22 @@
         openModalBtn.addEventListener("click", function () {
             openModal("createProjectModal");
 
-            if (typeof initializeQuillEditors === 'function') {
-                initializeQuillEditors();
-            }
+            
+            setTimeout(() => {
+                initializeImageModalHandlers();
+                showCameraOverlayIfNoImage();
+
+                if (typeof initializeQuillEditors === 'function') {
+                    initializeQuillEditors();
+                }
+            }, 50); 
         });
+    }
+
+    
+    if (document.getElementById("editProjectModal")?.style.display === "block") {
+        initializeImageModalHandlers();
+        showCameraOverlayIfNoImage();
     }
 });
 
@@ -44,6 +56,33 @@ function openEditModal(projectId) {
 }
 
 // Function to initialize image modal handlers
+
+function showCameraOverlayIfNoImage() {
+    const preview = document.getElementById("cameraPreview");
+    const overlay = document.getElementById("cameraOverlay");
+    const editIcon = document.querySelector(".edit-icon");
+
+    if (!preview || !overlay) {
+        console.log("Missing preview or overlay element.");
+        return;
+    }
+
+    const isDefault = preview.src.includes("default.png");
+
+    if (isDefault) {
+        overlay.style.opacity = "1";            
+        preview.style.opacity = "0";            
+        if (editIcon) editIcon.style.display = "none";  
+    } else {
+        overlay.style.opacity = "0";            
+        preview.style.opacity = "1";            
+        if (editIcon) editIcon.style.display = "flex";  
+    }
+}
+
+
+
+
 function initializeImageModalHandlers() {
     const openUploadModalBtn = document.getElementById("openUploadModal");
     const uploadModal = document.getElementById("uploadModal");
@@ -126,6 +165,8 @@ function initializeImageModalHandlers() {
                 }
             }
 
+            showCameraOverlayIfNoImage();
+
             closeModal("uploadModal");
         });
     }
@@ -169,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 li.style.padding = "8px";
                 li.style.cursor = "pointer";
 
-                // Create and append the image
+                
                 const img = document.createElement("img");
                 img.src = member.imageData?.currentImage || '/images/membericon/default.png';
                 img.style.width = "30px";
@@ -178,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.style.objectFit = "cover";
                 li.appendChild(img);
 
-                // Create and append the text content
+                
                 const textContent = document.createElement("span");
                 textContent.textContent = `${member.firstName} ${member.lastName} (${member.email})`;
                 li.appendChild(textContent);
@@ -209,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
         chip.style.alignItems = "center";
         chip.style.gap = "4px";
 
-        // Add member image to chip
         const img = document.createElement("img");
         img.src = member.imageData?.currentImage || '/images/membericon/default.png';
         img.style.width = "20px";

@@ -36,7 +36,7 @@
     .form-group select {
         width: 100%;
         padding: 10px;
-        border: 1px solid var(--Body-Dark);
+        border: 1px solid var(--Border-form);
         border-radius: 0.875rem;
         font-size: 14px;
         background: var(--Surface);
@@ -79,44 +79,12 @@
     .btn-project-form:hover {
         background: var(--Accent-Hover);
     }
-/* Create Project Modal Styles */
-/*.upload-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+
+.input-wrapper {
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
 }
+/* Create Project Modal Styles */
 
-.upload-modal-content {
-    background: var(--Surface);
-    border-radius: 8px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 85vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.close-modal {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    cursor: pointer;
-    font-size: 1.25rem;
-    color: #666;
-    z-index: 1;
-}
-
-.close-modal:hover {
-    color: #333;
-}*/
 .error {
     color: red;
     font-size: 0.85rem;
@@ -127,12 +95,14 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    border: 1px solid #ccc;
-    padding: 4px;
-    border-radius: 4px;
+    padding: 0; 
+    border: 1px solid var(--Border-form);
+    border-radius: 0.875rem;
     margin-top: 4px;
     margin-bottom: 6px;
     width: 100%;
+    max-width: 500px;
+    background: var(--Surface);
 }
 
 .chips-container {
@@ -147,6 +117,10 @@
     flex: 1;
     min-width: 120px;
     font-size: 14px;
+    padding: 10px;
+    border-radius: 0.875rem;
+    background: var(--Surface);
+    color: var(--Heading);
 }
 
 #memberSearchResults {
@@ -154,7 +128,7 @@
     margin: 0;
     padding: 0;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 0.875rem;
     max-height: 100px;
     overflow-y: auto;
 }
@@ -163,14 +137,16 @@
         padding: 4px 8px;
         cursor: pointer;
         font-size: 14px;
+        
     }
 
         #memberSearchResults li:hover {
-            background-color: #f0f0f0;
+            background-color: var(--Hover-search-members);
         }
 
 .chip {
-    background-color: var(--Grey-300);
+    background-color: var(--Background-search-members);
+    color: var(--Text-searched-members);
     border-radius: 12px;
     padding: 2px 8px;
     display: inline-flex;
@@ -186,31 +162,79 @@
     }
 
 /* Image upload styles */
+
+.project-image-upload-wrapper .image-upload {
+    border-radius: 15%; 
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border: 2px dashed #ccc;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.image-upload-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+
 .image-upload {
+    position: relative;
+    border: 2px dashed var(--Border-300);
+    border-radius: 15%;
     width: 9.375rem;
     height: 9.375rem;
-    border: 1px dashed var(--Border-300);
-    border-radius: 1.875rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
+    background-color: var(--Background-preview);
     cursor: pointer;
-    margin: 0 auto 12px;
-}
-
-.wrapper-camera {
-    border: 16px solid #ccc;
-    border-radius: 50%;
-    background-color: rgba(51, 51, 51, 0.70);
-}
-
-.image-upload i {
-    font-size: 14px;
-    color: #888;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
+
+.upload-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit; 
+    overflow: hidden;
+    position: relative;
+}
+
+    .upload-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        display: block;
+        border-radius: inherit;
+    }
+.wrapper-camera {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(51, 51, 51, 0.6);
+    border-radius: 50%;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.wrapper-camera i {
+    font-size: 1.25rem;
+    color: #fff;
+}
+
 
 .img-modal {
     background: var(--Surface);
@@ -245,8 +269,9 @@
 /*quill*/
 .editor-wide {
     width: 100%;
-    max-width: 1000px;
+    max-width: 500px;
     margin: 0 auto;
+    border-radius: 0.875rem 0.875rem 0 0;
 }
 
 .desciption-hide {
@@ -254,8 +279,8 @@
 }
 
 #custom-toolbar {
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--Border-form);
+    border-radius: 0 0 0.875rem 0.875rem;
     padding: 4px;
     border-top: none;
     color: var(--Heading);
@@ -266,11 +291,36 @@
 
 .quill-editor {
     display: flex;
-    flex-direction: column-reverse; /* flip toolbar and editor */
+    flex-direction: column-reverse;
+}
+
+.ql-container.ql-snow {
+    border: 1px solid var(--Border-form);
 }
 
 .editor-wide {
     width: 520px;
     height: 130px;
     color: var(--Heading);
+}
+
+/*Dollar sign*/
+
+.input-with-symbol {
+    position: relative;
+    width: 100%;
+}
+
+.input-symbol {
+    position: absolute;
+    top: 48%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--Heading);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.input-with-symbol input {
+    padding-left: 24px; 
 }

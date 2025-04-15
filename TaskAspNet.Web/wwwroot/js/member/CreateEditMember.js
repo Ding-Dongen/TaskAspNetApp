@@ -2,15 +2,16 @@
     const openModalBtn = document.getElementById("btnOpenCreateModal");
     const modal = document.getElementById("createMemberModal");
 
-    // Open the modal
+    
     if (openModalBtn && modal) {
         openModalBtn.addEventListener("click", function () {
             openModal("createMemberModal");
         });
     }
-    // add phone and address
+ 
     initializeAddressAndPhoneHandlers();
     initializeImageModalHandlers();
+    showCameraOverlayIfNoImage();
 });
 
 function toggleEditIconBasedOnImage(previewElement, container) {
@@ -28,7 +29,7 @@ function toggleEditIconBasedOnImage(previewElement, container) {
 
 
 function initializeAddressAndPhoneHandlers() {
-    // Address handlers
+   
     document.querySelectorAll('.btn-add-address').forEach(button => {
         button.addEventListener('click', function () {
             const type = this.dataset.type;
@@ -36,7 +37,7 @@ function initializeAddressAndPhoneHandlers() {
         });
     });
 
-    // Phone handlers
+    
     document.querySelectorAll('.btn-add-phone').forEach(button => {
         button.addEventListener('click', function () {
             const type = this.dataset.type;
@@ -53,14 +54,14 @@ function initializeAccordionHandlers() {
             const targetId = button.getAttribute("data-target");
             const target = document.getElementById(targetId);
 
-            // Close other panels
+            
             document.querySelectorAll(".accordion-content").forEach(panel => {
                 if (panel !== target) {
                     panel.style.display = "none";
                 }
             });
 
-            // Toggle current
+            
             if (target.style.display === "block") {
                 target.style.display = "none";
             } else {
@@ -144,7 +145,7 @@ function closeModal(modalId) {
 
 /*Edit member modal*/
 function openEditModal(memberId) {
-    // 1. Make an AJAX/fetch call to retrieve the Edit form
+    
     fetch(`/Member/Edit/${memberId}`, {
         method: "GET",
         headers: {
@@ -158,21 +159,42 @@ function openEditModal(memberId) {
             return response.text();
         })
         .then(html => {
-            // 2. Load the returned HTML into #editMemberContainer
+            
             document.getElementById("editMemberContainer").innerHTML = html;
 
-            // 3. Show the modal
+           
             openModal("editMemberModal");
 
-            // 4. Initialize modal handlers for the edit form
+            
             initializeImageModalHandlers();
-            initializeAccordionHandlers();  // ← IMPORTANT
+            initializeAccordionHandlers();  
             initializeAddressAndPhoneHandlers();
         })
         .catch(error => {
             console.error("Failed to load edit form:", error);
         });
 }
+
+function showCameraOverlayIfNoImage() {
+    const preview = document.getElementById("cameraPreview");
+    const overlay = document.getElementById("cameraOverlay");
+    const penIcon = document.querySelector(".edit-icon");
+
+    if (!preview || !overlay) return;
+
+    const defaultImageName = "default.png";
+    const isDefault = preview.src.includes(defaultImageName);
+
+    
+    overlay.style.opacity = isDefault ? "1" : "0";
+
+    
+    preview.style.opacity = isDefault ? "0" : "1";
+
+    
+    if (penIcon) penIcon.style.display = isDefault ? "none" : "flex";
+}
+
 
 // Function to initialize image modal handlers
 function initializeImageModalHandlers() {
@@ -186,14 +208,14 @@ function initializeImageModalHandlers() {
     const selectImage = document.getElementById("selectImage");
     const saveBtn = document.getElementById("saveImageSelection");
 
-    // Open modal handler
+    
     if (openUploadModalBtn && uploadModal) {
         openUploadModalBtn.addEventListener("click", function () {
             openModal("uploadModal");
         });
     }
 
-    // File upload handler
+    
     if (triggerFileInput && fileInput && imagePreview) {
         triggerFileInput.addEventListener("click", function () {
             fileInput.click();
@@ -235,6 +257,8 @@ function initializeImageModalHandlers() {
         });
     }
 
+   
+
     // Save selection handler
     if (saveBtn && imagePreview) {
         saveBtn.addEventListener("click", function () {
@@ -243,6 +267,7 @@ function initializeImageModalHandlers() {
 
             if (cameraPreview) {
                 cameraPreview.src = chosenSrc;
+                showCameraOverlayIfNoImage();
             }
 
             if (hiddenCurrentImage) {
@@ -275,14 +300,14 @@ if (openUploadModalBtn && uploadModal) {
     });
 }
 
-// -- CLOSE MODAL WITH 'X' --
+
 if (closeModalBtn) {
     closeModalBtn.addEventListener("click", function () {
         uploadModal.style.display = "none";
     });
 }
 
-// -- CLOSE MODAL WHEN CLICKING OUTSIDE --
+
 window.addEventListener("click", function (event) {
     if (event.target === uploadModal) {
         uploadModal.style.display = "none";
@@ -307,10 +332,10 @@ if (triggerFileInput && fileInput && imagePreview) {
             reader.onload = function (e) {
                 imagePreview.src = e.target.result;
                 if (hiddenCurrentImage) {
-                    hiddenCurrentImage.value = ""; // Clear current image when uploading new one
+                    hiddenCurrentImage.value = ""; 
                 }
                 if (hiddenSelectedImage) {
-                    hiddenSelectedImage.value = ""; // Clear selected image when uploading new one
+                    hiddenSelectedImage.value = ""; 
                 }
             };
             reader.readAsDataURL(this.files[0]);
@@ -329,9 +354,9 @@ if (selectImage && imagePreview) {
                 hiddenSelectedImage.value = selected;
             }
             if (hiddenCurrentImage) {
-                hiddenCurrentImage.value = ""; // Clear current image when selecting predefined
+                hiddenCurrentImage.value = ""; 
             }
-            // Clear file input when selecting predefined image
+            
             if (fileInput) {
                 fileInput.value = "";
             }
@@ -350,16 +375,16 @@ if (saveBtn && imagePreview) {
             cameraPreview.src = chosenSrc;
         }
 
-        // Update hidden fields based on selection type
+        
         if (hiddenCurrentImage) {
             if (chosenSrc.startsWith("data:")) {
-                // For uploaded files (data URLs)
+               
                 hiddenCurrentImage.value = chosenSrc;
                 if (hiddenSelectedImage) {
                     hiddenSelectedImage.value = "";
                 }
             } else if (chosenSrc.includes("/membericon/")) {
-                // For predefined images
+                
                 hiddenCurrentImage.value = chosenSrc;
                 if (hiddenSelectedImage) {
                     hiddenSelectedImage.value = chosenSrc.split("/membericon/")[1];
@@ -367,7 +392,7 @@ if (saveBtn && imagePreview) {
             }
         }
 
-        // Close modal
+        
         if (uploadModal) {
             uploadModal.style.display = "none";
         }
@@ -387,82 +412,82 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("memberForm");
+//document.addEventListener("DOMContentLoaded", function () {
+//    const form = document.getElementById("memberForm");
 
-    const fields = [
-        {
-            el: form.querySelector("[name='FirstName']"),
-            validate: val => val.trim().length > 0,
-            message: "First Name is required."
-        },
-        {
-            el: form.querySelector("[name='LastName']"),
-            validate: val => val.trim().length > 0,
-            message: "Last Name is required."
-        },
-        {
-            el: form.querySelector("[name='Email']"),
-            validate: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-            message: "Enter a valid email address."
-        },
-        {
-            el: form.querySelector("[name='JobTitleId']"),
-            validate: val => val.trim().length > 0,
-            message: "Job Title is required."
-        }
-    ];
+//    const fields = [
+//        {
+//            el: form.querySelector("[name='FirstName']"),
+//            validate: val => val.trim().length > 0,
+//            message: "First Name is required."
+//        },
+//        {
+//            el: form.querySelector("[name='LastName']"),
+//            validate: val => val.trim().length > 0,
+//            message: "Last Name is required."
+//        },
+//        {
+//            el: form.querySelector("[name='Email']"),
+//            validate: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+//            message: "Enter a valid email address."
+//        },
+//        {
+//            el: form.querySelector("[name='JobTitleId']"),
+//            validate: val => val.trim().length > 0,
+//            message: "Job Title is required."
+//        }
+//    ];
 
-    function showError(el, message) {
-        el.classList.add("input-error");
+//    function showError(el, message) {
+//        el.classList.add("input-error");
 
-        const icon = el.parentNode.querySelector(".error-icon");
-        if (icon) icon.style.display = "block";
+//        const icon = el.parentNode.querySelector(".error-icon");
+//        if (icon) icon.style.display = "block";
 
-        let msg = el.parentNode.querySelector(".error-message");
-        if (!msg) {
-            msg = document.createElement("div");
-            msg.className = "error-message";
-            el.parentNode.appendChild(msg);
-        }
+//        let msg = el.parentNode.querySelector(".error-message");
+//        if (!msg) {
+//            msg = document.createElement("div");
+//            msg.className = "error-message";
+//            el.parentNode.appendChild(msg);
+//        }
 
-        msg.textContent = message;
-    }
+//        msg.textContent = message;
+//    }
 
-    function clearError(el) {
-        el.classList.remove("input-error");
+//    function clearError(el) {
+//        el.classList.remove("input-error");
 
-        const icon = el.parentNode.querySelector(".error-icon");
-        if (icon) icon.style.display = "none";
+//        const icon = el.parentNode.querySelector(".error-icon");
+//        if (icon) icon.style.display = "none";
 
-        const msg = el.parentNode.querySelector(".error-message");
-        if (msg) msg.remove();
-    }
+//        const msg = el.parentNode.querySelector(".error-message");
+//        if (msg) msg.remove();
+//    }
 
-    fields.forEach(field => {
-        field.el.addEventListener("input", () => {
-            if (field.validate(field.el.value)) {
-                clearError(field.el);
-            } else {
-                showError(field.el, field.message);
-            }
-        });
-    });
+//    fields.forEach(field => {
+//        field.el.addEventListener("input", () => {
+//            if (field.validate(field.el.value)) {
+//                clearError(field.el);
+//            } else {
+//                showError(field.el, field.message);
+//            }
+//        });
+//    });
 
-    form.addEventListener("submit", function (e) {
-        let hasError = false;
+//    form.addEventListener("submit", function (e) {
+//        let hasError = false;
 
-        fields.forEach(field => {
-            if (!field.validate(field.el.value)) {
-                showError(field.el, field.message);
-                hasError = true;
-            } else {
-                clearError(field.el);
-            }
-        });
+//        fields.forEach(field => {
+//            if (!field.validate(field.el.value)) {
+//                showError(field.el, field.message);
+//                hasError = true;
+//            } else {
+//                clearError(field.el);
+//            }
+//        });
 
-        if (hasError) {
-            e.preventDefault();
-        }
-    });
-});
+//        if (hasError) {
+//            e.preventDefault();
+//        }
+//    });
+//});

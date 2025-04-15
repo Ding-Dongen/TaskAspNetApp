@@ -51,7 +51,8 @@ public class ProjectController : Controller
             {
                 ImageData = new UploadSelectImgDto
                 {
-                    PredefinedImages = imageFiles 
+                    PredefinedImages = imageFiles
+                    
                 }
             }
         };
