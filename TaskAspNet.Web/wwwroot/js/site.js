@@ -437,3 +437,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+
+
+// Attach an event listener to open the modal on button click
+var openButton = document.getElementById('openConsentModalButton');
+if (openButton) {
+    openButton.addEventListener('click', function () {
+        var modal = document.getElementById('consentModal');
+        if (modal) {
+            modal.style.display = 'flex';  
+        }
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    let functionalConsent = localStorage.getItem("functionalCookies");
+    functionalConsent = functionalConsent ? JSON.parse(functionalConsent) : false;
+    
+    var darkModeToggle = document.getElementById("darkModeToggle");
+    
+    if (darkModeToggle) {
+        if (!functionalConsent) {
+            darkModeToggle.disabled = true;
+            
+            darkModeToggle.title = "Dark mode is disabled because you declined functional cookies.";
+            
+            document.body.classList.remove("dark-mode");
+        } else {
+            darkModeToggle.disabled = false;
+        }
+    }
+});

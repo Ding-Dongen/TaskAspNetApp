@@ -1,0 +1,212 @@
+﻿@model CookieConsentViewModel
+
+<!-- Hidden overlay -->
+<div id="cookieConsentModal"
+     style="position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none; /* hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;">
+
+    <div style="
+        background-color: #fff;
+        padding: 20px;
+        max-width: 500px;
+        width: 90%;
+        border-radius: 5px;
+        text-align: left;
+    ">
+        <h2>Cookie Preferences</h2>
+        <p>We use different types of cookies to improve your experience.</p>
+
+        <div id="consentError" style="display: none; color: red; margin-bottom: 10px;"></div>
+
+        <form id="cookieConsentForm" method="post" action="/Consent/Save">
+            @Html.AntiForgeryToken()
+            
+            
+            <label>
+                <input type="checkbox" name="NecessaryCookies" checked="checked" disabled="disabled" />
+                Necessary Cookies (Always Enabled)
+            </label>
+            <br />
+
+            <label>
+                <input type="checkbox" name="FunctionalCookies" @(Model.FunctionalCookies ? "checked=\"checked\"" : "") />
+                Functional Cookies
+            </label>
+            <br />
+
+            <label>
+                <input type="checkbox" name="AnalyticsCookies"
+                @(Model.AnalyticsCookies ? "checked=\"checked\"" : "") />
+                Analytics Cookies
+            </label>
+            <br />
+
+            <label>
+                <input type="checkbox" name="MarketingCookies"
+                @(Model.MarketingCookies ? "checked=\"checked\"" : "") />
+                Marketing Cookies
+            </label>
+            <br />
+
+            <label>
+                <input type="checkbox" name="AdvertisingCookies"
+                @(Model.AdvertisingCookies ? "checked=\"checked\"" : "") />
+                Advertising Cookies
+            </label>
+            <br /><br />
+
+            <button type="button" id="btnAcceptAll" class="btn btn-primary">
+                Accept All
+            </button>
+
+            <button type="button" id="btnDeclineAll" class="btn btn-secondary">
+                Decline All
+            </button>
+            <br /><br />
+
+            <button type="submit" class="btn btn-success">Save Preferences</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function(){
+        var modal = document.getElementById('cookieConsentModal');
+        var acceptAllBtn = document.getElementById('btnAcceptAll');
+        var declineAllBtn = document.getElementById('btnDeclineAll');
+        var form = document.getElementById('cookieConsentForm');
+        var errorDiv = document.getElementById('consentError');
+
+        if (!modal || !acceptAllBtn || !declineAllBtn || !form) {
+            console.error('Cookie consent elements not found');
+            return;
+        }
+
+        function showError(message) {
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function handleFormSubmit(formData) {
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Saving...';
+            submitButton.disabled = true;
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            const data = new FormData();
+            data.append('__RequestVerificationToken', token);
+
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                data.append(checkbox.name, checkbox.checked);
+            });
+
+            const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            data.append('IsConsentGiven', anyChecked);
+
+            localStorage.setItem('cookieConsentSubmitted', 'true');
+
+            fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text || 'Network response was not ok');
+                    });
+                }
+                return response.json();
+            })
+                .then(data => {
+                if (data.success) {
+                   
+                    var functionalValue = document.querySelector('input[name="FunctionalCookies"]').checked;
+                    localStorage.setItem("functionalCookies", JSON.stringify(functionalValue));
+
+                    
+                    if (modal) {
+                        modal.style.display = 'none';
+                    }
+   
+                } else {
+                    throw new Error(data.message || 'Failed to save preferences');
+                }
+            })
+
+            .catch(error => {
+                console.error('Error:', error);
+                let errorMessage = 'Failed to save preferences. Please try again.';
+                try {
+                    const errorData = JSON.parse(error.message);
+                    if (errorData.message) {
+                        errorMessage = errorData.message;
+                    }
+                } catch (e) {
+                    if (error.message) {
+                        errorMessage = error.message;
+                    }
+                }
+                showError(errorMessage);
+            })
+            .finally(() => {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            });
+        }
+
+        acceptAllBtn.addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('#cookieConsentForm input[type="checkbox"]:not([disabled])');
+            checkboxes.forEach(cb => cb.checked = true);
+            handleFormSubmit(new FormData(form));
+        });
+
+        declineAllBtn.addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('#cookieConsentForm input[type="checkbox"]:not([disabled])');
+            checkboxes.forEach(cb => cb.checked = false);
+            handleFormSubmit(new FormData(form));
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(new FormData(form));
+        });
+
+        if (localStorage.getItem('cookieConsentSubmitted') === 'true') {
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        window.showCookieModal = function() {
+            var modal = document.getElementById('cookieConsentModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        };
+
+        window.hideCookieModal = function() {
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        };
+    })();
+
+</script>
+

@@ -131,9 +131,7 @@ public class MemberController : Controller
             await PopulatePredefinedImagesAsync(memberDto);
 
             return PartialView(
-                "~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml",
-                memberDto
-            );
+                "~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml", memberDto);
         }
 
         var (success, createdMember, errorMessage) = await _memberAppService.CreateMemberAsync(memberDto);
@@ -144,9 +142,7 @@ public class MemberController : Controller
             await PopulatePredefinedImagesAsync(memberDto);
 
             return PartialView(
-                "~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml",
-                memberDto
-            );
+                "~/Views/Shared/Partials/Components/Member/_CreateEditMember.cshtml", memberDto);
         }
 
         return RedirectToAction("Index","Project");

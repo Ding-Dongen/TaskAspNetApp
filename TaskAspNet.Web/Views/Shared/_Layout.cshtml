@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
+<body class="@(signInManager.IsSignedIn(User) ? "authenticated" : "")">
 
     @if (signInManager.IsSignedIn(User))
     {
@@ -37,6 +37,40 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    @{
+        bool hasConsent = ViewBag.HasConsent == null ? false : (bool)ViewBag.HasConsent;
+    }
+
+    @await Html.PartialAsync("~/Views/Shared/Partials/Components/_ConsentModal.cshtml", new CookieConsentViewModel
+{
+    NecessaryCookies = true,
+    FunctionalCookies = false,
+    AnalyticsCookies = false,
+    MarketingCookies = false,
+    AdvertisingCookies = false
+})
+
+    <script>
+        const hasConsent = @Html.Raw(hasConsent.ToString().ToLower());
+        const isSignedIn = @Html.Raw(signInManager.IsSignedIn(User).ToString().ToLower());
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!hasConsent && !isSignedIn && !localStorage.getItem("cookieConsentSubmitted")) {
+                if (typeof showCookieModal === "function") {
+                    showCookieModal();
+                }
+            }
+        });
+    </script>
+
+
+    <button type="button"
+            class="cookie-button"
+            onclick="showCookieModal();">
+        <i class="fa-duotone fa-solid fa-cookie-bite"></i>
+    </button>
+
 
 </body>
 </html>

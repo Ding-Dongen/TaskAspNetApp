@@ -672,4 +672,14 @@ input:checked + .slider {
    
 }
 
-
+.cookie-button {
+    position: fixed;
+    bottom: 30px;
+    left: 40px;
+    z-index: 99999;
+    font-size: 3em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #666;
+}

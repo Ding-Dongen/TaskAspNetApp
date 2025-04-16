@@ -44,6 +44,7 @@ public class BaseRepository<T>(AppDbContext context) : IBaseRepository<T> where 
     public async Task<T> DeleteAsync(T entity)
     {
         _dbSet.Remove(entity);
+        await _context.SaveChangesAsync();
         return entity;
     }
 

@@ -19,10 +19,27 @@ public class AppDbContext : DbContext
     public DbSet<NotificationTypeEntity> NotificationTypes { get; set; }
     public DbSet<NotificationTargetGroupEntity> NotificationTargetGroups { get; set; }
     public DbSet<NotificationDismissalEntity> NotificationDismissals { get; set; }
+    public DbSet<Consent> Consents { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        
+        modelBuilder.Entity<Consent>(entity =>
+        {
+            entity.ToTable("Consent", "dbo");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.IsConsentGiven).IsRequired();
+            entity.Property(e => e.FunctionalCookies).IsRequired();
+            entity.Property(e => e.AnalyticsCookies).IsRequired();
+            entity.Property(e => e.MarketingCookies).IsRequired();
+            entity.Property(e => e.AdvertisingCookies).IsRequired();
+            entity.Property(e => e.DateGiven).IsRequired();
+        });
+
         modelBuilder.Entity<NotificationDismissalEntity>()
         .HasKey(nd => new { nd.NotificationId, nd.UserId });
 
