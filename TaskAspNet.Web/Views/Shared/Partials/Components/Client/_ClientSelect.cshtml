@@ -1,0 +1,24 @@
+﻿@model TaskAspNet.Business.Dtos.ProjectDto
+
+@{
+    var clients = ViewData["Clients"] as IEnumerable<TaskAspNet.Business.Dtos.ClientDto>;
+}
+
+<div class="form-group">
+    <label asp-for="ClientId">Client</label>
+    <div class="input-wrapper">
+        <select asp-for="ClientId" class="form-control" required>
+            <option value="">-- Select Client --</option>
+            @if (clients != null)
+            {
+                foreach (var client in clients)
+                {
+                    <option value="@client.Id" selected="@(Model.ClientId == client.Id)">
+                        @client.ClientName
+                    </option>
+                }
+            }
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+</div>

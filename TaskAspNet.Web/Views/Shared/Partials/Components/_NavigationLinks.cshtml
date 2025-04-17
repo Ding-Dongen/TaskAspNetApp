@@ -16,6 +16,10 @@
             <i class="fa-duotone fa-solid fa-briefcase"></i>
             <span>Manage Users</span>
         </a>
+        <a class="links @(Context.Request.Path == "/Client/Index" ? "active" : "")" asp-action="Index" asp-controller="Client">
+            <i class="fa-duotone fa-solid fa-briefcase"></i>
+            <span>Manage Clients</span>
+        </a>
     }
     else
     {

@@ -22,6 +22,9 @@ public class MemberAddressEntity
     [StringLength(50)]
     public string AddressType { get; set; } = "Home";
 
-    public int MemberId { get; set; }
-    public MemberEntity Member { get; set; } = null!;
+    public int? MemberId { get; set; }
+    public MemberEntity? Member { get; set; }
+
+    public int? ClientId { get; set; }
+    public ClientEntity? Client { get; set; }
 }

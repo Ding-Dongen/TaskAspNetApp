@@ -1,4 +1,16 @@
-﻿@model ProjectIndexViewModel
+﻿
+
+@model ProjectIndexViewModel
+
+@{
+    var createProjectViewData = new ViewDataDictionary(ViewData)
+    {
+        ["Clients"] = ViewData["Clients"],
+        ["SelectedClientId"] = ViewData["SelectedClientId"]
+    };
+}
+
+
 
 <div class="projects-container">
     <div class="project-header">
@@ -45,7 +57,7 @@
             <span class="close-modal">&times;</span>
             </div>
             <div id="createProjectContainer" class="create-edit-form-container">
-                @await Html.PartialAsync("~/Views/Shared/Partials/Components/Project/_CreateEditProject.cshtml", Model.CreateProject)
+                @await Html.PartialAsync("~/Views/Shared/Partials/Components/Project/_CreateEditProject.cshtml", Model.CreateProject, createProjectViewData)
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿
+document.addEventListener("DOMContentLoaded", function () {
     const openModalBtn = document.getElementById("btnOpenCreateModal");
     const modal = document.getElementById("createProjectModal");
 
@@ -277,3 +278,26 @@ document.addEventListener("DOMContentLoaded", () => {
         memberSearchResults.innerHTML = "";
     }
 });
+
+async function fetchClientsHtml() {
+    const res = await fetch("/Client/Dropdown");
+    if (!res.ok) throw new Error("Cannot load clients");
+    return res.text();                   // <option …>…</option>
+}
+
+async function hydrateClientSelects(container = document) {
+    const selects = container.querySelectorAll(".client-select:not([data-loaded])");
+    if (!selects.length) return;
+
+    const optionHtml = await fetchClientsHtml();
+
+    selects.forEach(sel => {
+        const current = +sel.dataset.currentClient || 0;
+        sel.innerHTML = '<option value="">— Select client —</option>' + optionHtml;
+
+        // pre‑select on Edit
+        if (current) sel.value = current;
+
+        sel.dataset.loaded = "1";
+    });
+}

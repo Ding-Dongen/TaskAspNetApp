@@ -1,0 +1,61 @@
+﻿@model ClientIndexViewModel
+
+<div class="member-container">
+    <div class="member-header">
+        <h2>Clients</h2>
+        <button id="btnOpenCreateModal" data-modal="createClientModal" class="btn btn-create-form">+ Add Client</button>
+    </div>
+
+
+    <div class="member-list">
+        @foreach (var client in Model.AllMembers)
+        {
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Client/_ClientCard.cshtml", client) <!-- Each member card or list item -->
+        }
+    </div>
+
+</div>
+<div id="editMemberModal" class="modal-overlay create-modal-overlay edit-modal-overlay">
+        <div class="modal-content edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 class="modal-title">Edit Member</h3>
+                <button class="modal-close" onclick="closeModal('editMemberModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="editMemberContainer">
+                    <!-- Edit form will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+@* <div id="editMemberModal" class="upload-modal-overlay" style="display: none;">
+        <div class="upload-modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="editMemberContainer">
+                <!-- Loading edit -->
+            </div>
+        </div>
+    </div> *@
+
+<div id="createClientModal" class="modal-overlay create-modal-overlay">
+    <div class="modal-content create-modal-content">
+        <h3 class="create-modal-title">New Client</h3>
+        <button class="modal-close" onclick="closeModal('createClientModal')">&times;</button>
+        <div id="createClientContainer">
+            @await Html.PartialAsync("~/Views/Shared/Partials/Components/Client/_CreateEditClient.cshtml", Model.CreateClient)
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+        <link rel="stylesheet" href="~/css/client/ClientCard.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/client/Index.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/client/CreateEditClient.css" asp-append-version="true" />
+}
+
+@section Scripts {
+         <script src="~/js/client/ClientCard.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/client/CreateEditClient.js" asp-append-version="true"></script>
+}

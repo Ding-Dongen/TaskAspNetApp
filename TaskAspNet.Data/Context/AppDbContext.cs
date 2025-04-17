@@ -69,6 +69,30 @@ public class AppDbContext : DbContext
             .WithMany(m => m.ProjectMembers)
             .HasForeignKey(pm => pm.MemberId);
 
+            modelBuilder.Entity<MemberAddressEntity>()
+            .HasOne(ma => ma.Member)
+            .WithMany(m => m.Addresses)
+            .HasForeignKey(ma => ma.MemberId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MemberAddressEntity>()
+            .HasOne(ma => ma.Client)
+            .WithMany(c => c.Addresses)
+            .HasForeignKey(ma => ma.ClientId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MemberPhoneEntity>()
+            .HasOne(mp => mp.Member)
+            .WithMany(m => m.Phones)
+            .HasForeignKey(mp => mp.MemberId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MemberPhoneEntity>()
+            .HasOne(mp => mp.Client)
+            .WithMany(c => c.Phones)
+            .HasForeignKey(mp => mp.ClientId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         // ✅ Seed Job Titles
         modelBuilder.Entity<JobTitleEntity>().HasData(
             new JobTitleEntity { Id = 1, Title = "Developer" },
@@ -191,5 +215,14 @@ public class AppDbContext : DbContext
             new ProjectMemberEntity { ProjectId = 3, MemberId = 1 },
             new ProjectMemberEntity { ProjectId = 3, MemberId = 3 }
         );
+
+        //modelBuilder.Entity<ClientEntity>().HasData(
+        //    new ClientEntity { Id = 1, ClientName = "Acme Corporation", Email = "contact@acme.com", Notes = "Longtime partner" },
+        //    new ClientEntity { Id = 2, ClientName = "TechStart Inc.", Email = "hello@techstart.com", Notes = "Startup client" },
+        //    new ClientEntity { Id = 3, ClientName = "Global Solutions Ltd.", Email = "info@globalsolutions.com", Notes = "International" }
+        //);
+
+
+
     }
 }

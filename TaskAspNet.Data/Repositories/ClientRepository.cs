@@ -15,4 +15,21 @@ public class ClientRepository(AppDbContext context) : BaseRepository<ClientEntit
     {
         return await _context.Clients.FirstOrDefaultAsync(c => c.ClientName == clientName);
     }
+
+    public async Task<ClientEntity?> GetByIdWithDetailsAsync(int id)
+    {
+        return await _context.Clients
+            .Include(c => c.Addresses)
+            .Include(c => c.Phones)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<List<ClientEntity>> GetAllWithDetailsAsync()
+    {
+        return await _context.Clients
+            .Include(c => c.Phones)
+            .Include(c => c.Addresses)
+            .ToListAsync();
+    }
+
 }

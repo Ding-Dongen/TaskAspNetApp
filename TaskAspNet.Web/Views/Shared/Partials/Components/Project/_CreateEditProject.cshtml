@@ -1,7 +1,14 @@
-﻿@model ProjectDto
+﻿
+
+@model ProjectDto
 
 @{
-    
+
+    var clients = ViewData["Clients"] as IEnumerable<ClientDto>
+                  ?? Enumerable.Empty<ClientDto>();
+
+    var clientSelectList = new SelectList(clients, "Id", "ClientName", Model.ClientId);
+
     var formAction = Model.Id > 0 ? "Edit" : "Create";
 }
 
@@ -64,15 +71,19 @@
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
+
         
+
         <div class="form-group">
-            <label asp-for="Client.ClientName">Client Name</label>
+            <label asp-for="ClientId">Client</label>
             <div class="input-wrapper">
-                    <input asp-for="Client.ClientName" class="form-control" required placeholder="Client Name"
-                       data-validate-rule="required"
-                       data-validate-message="Client name is required." />
-                    <i class="fa-solid fa-triangle-exclamation error-icon"></i>
-            <span asp-validation-for="Client.ClientName" class="text-danger"></span>
+                <select asp-for="ClientId"
+                        asp-items="@(new SelectList(clients, "Id", "ClientName", Model.ClientId))"
+                        class="form-control"
+                        required>
+                    <option value="">-- Select Client --</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
             </div>
         </div>
 

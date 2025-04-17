@@ -15,6 +15,11 @@ public class ClientEntity
     [ProtectedPersonalData]
     public string ClientName { get; set; } = string.Empty;
 
-    
-    public List<ProjectEntity> Projects { get; set; } = new();
+    public string? Email { get; set; }
+    public string? Notes { get; set; }
+
+    // Navigation properties
+    public ICollection<ProjectEntity> Projects { get; set; } = new List<ProjectEntity>();
+    public ICollection<MemberAddressEntity> Addresses { get; set; } = new List<MemberAddressEntity>();
+    public ICollection<MemberPhoneEntity> Phones { get; set; } = new List<MemberPhoneEntity>();
 }

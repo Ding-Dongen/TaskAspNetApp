@@ -1,0 +1,438 @@
+
+
+/* Create Project form Styles */
+
+/* ================= CLIENT FORM STYLES ================= */
+
+.wrapper-client-form {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: var(--Surface);
+    border-radius: 12px;
+}
+
+    /* Form Labels & Inputs */
+    .wrapper-client-form .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+        .wrapper-client-form .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--Heading);
+        }
+
+        .wrapper-client-form .form-group input,
+        .wrapper-client-form .form-group textarea,
+        .wrapper-client-form .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            border-radius: 8px;
+            background: var(--Surface);
+            color: var(--Heading);
+        }
+
+    /* Name & Row groups */
+    .wrapper-client-form .name-group,
+    .wrapper-client-form .row-group {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .wrapper-client-form .input-box {
+        flex: 1;
+        min-width: 0;
+    }
+
+        .wrapper-client-form .input-box label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+/* ======== Modal Overlay ======== */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ======== Modal Content ======== */
+.client-modal-content {
+    background-color: var(--Surface);
+    color: var(--Heading);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    animation: slideFade 0.3s ease-out;
+}
+
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ======== Modal Header ======== */
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* ======== Modal Close Button ======== */
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--Heading);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+    .modal-close:hover {
+        color: #d33;
+    }
+
+
+/* Submit Button */
+.btn-client-form {
+    width: 100%;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background 0.2s ease;
+}
+
+    .btn-client-form:hover {
+        background-color: #1669d8;
+    }
+
+/* Accordion */
+.accordion-toggle {
+    width: 100%;
+    padding: 12px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 10px 10px 0 0;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s ease;
+}
+
+    .accordion-toggle:hover {
+        background: #e4e4e4;
+    }
+
+.accordion-content {
+    display: none;
+    padding: 10px 15px;
+    background: var(--Surface);
+    border: 1px solid #fff;
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Address & Phone Sections */
+.address-actions,
+.phone-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-add-address,
+.btn-add-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: var(--Surface);
+    cursor: pointer;
+    color: var(--Heading);
+    transition: all 0.2s ease;
+}
+
+    .btn-add-address:hover,
+    .btn-add-phone:hover {
+        background: #f8f9fa;
+        border-color: #ced4da;
+    }
+
+/* Address and Phone Blocks */
+.address-block,
+.phone-block {
+    background: var(--Surface);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease;
+}
+
+    .address-block:hover,
+    .phone-block:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+.address-header,
+.phone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.address-type,
+.phone-type {
+    font-weight: 600;
+    color: var(--Heading);
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: var(--Heading);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s ease;
+}
+
+    .btn-remove:hover {
+        color: #d33;
+    }
+
+.form-row {
+    margin-bottom: 0.75rem;
+}
+
+    .form-row input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: var(--Surface);
+        color: var(--Heading);
+    }
+
+
+/*.wrapper-client-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.client-form-class {
+    background: var(--Surface);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--Hover-project-card);
+    outline: none;
+}
+
+.error-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #dc3545;
+    display: none;
+}
+
+.text-danger {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}*/
+
+/* Accordion Styles */
+/*.accordion-group {
+    margin-bottom: 2rem;
+}
+
+.accordion-toggle {
+    width: 100%;
+    padding: 1rem;
+    background: var(--Surface);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.accordion-toggle i {
+    transition: transform 0.2s ease;
+}
+
+.accordion-content {
+    display: none;
+    padding: 1rem;
+    background: var(--Surface);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}*/
+
+/* Address and Phone Actions */
+/*.address-actions,
+.phone-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-add-address,
+.btn-add-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: var(--Surface);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--Heading);
+}
+
+.btn-add-address:hover,
+.btn-add-phone:hover {
+    background: #f8f9fa;
+    border-color: #ced4da;
+}*/
+
+/* Address and Phone Blocks */
+/*.address-block,
+.phone-block {
+    background: var(--Surface);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.address-header,
+.phone-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.address-type,
+.phone-type {
+    font-weight: 600;
+    color: var(--Heading);
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: var(--Heading);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.btn-remove:hover {
+    color: var(--Hover-project-card);
+}
+
+.form-row {
+    margin-bottom: 0.75rem;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}*/
+
+/* Submit Button */
+/*.btn-client-form {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--Hover-project-card);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-client-form:hover {
+    background: var(--Hover-project-card);
+    opacity: 0.9;
+}*/ 

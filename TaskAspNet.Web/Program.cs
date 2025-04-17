@@ -13,8 +13,15 @@ using TaskAspNet.Services;
 using TaskAspNet.Web.Hubs;
 using TaskAspNet.Web.Interfaces;
 using TaskAspNet.Web.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+  .AddControllersWithViews()
+  .AddJsonOptions(opts => {
+      opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+  });
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR(options =>
@@ -78,6 +85,8 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationHubService, NotificationHubService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();

@@ -39,6 +39,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function toggleMenu(id) {
+    const overlayMenu = document.getElementById(`overlay-${id}`);
+    if (!overlayMenu) return;
+
+    // Hide all others first
+    document.querySelectorAll('.overlay-menu').forEach(menu => {
+        if (menu.id !== `overlay-${id}`) menu.style.display = 'none';
+    });
+
+    // Toggle current menu
+    overlayMenu.style.display = overlayMenu.style.display === 'block' ? 'none' : 'block';
+}
+
+
 
 
 function initializeQuillEditors() {

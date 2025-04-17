@@ -6,6 +6,6 @@ public class ProjectIndexViewModel
     public ProjectDto CreateProject { get; set; } = new();
     public string SelectedStatus { get; set; } = "All";
     public List<ProjectDto> FilteredProjects { get; set; } = new();
-
+    public List<ClientDto> Clients { get; set; } = new();
 
 }

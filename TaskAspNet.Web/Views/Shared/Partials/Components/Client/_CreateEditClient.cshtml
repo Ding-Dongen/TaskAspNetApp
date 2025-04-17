@@ -1,0 +1,146 @@
+@model ClientDto
+
+@{
+    var formAction = Model.Id > 0 ? "Edit" : "CreateClient";
+}
+
+<div class="wrapper-client-form">
+    <form asp-action="@formAction"
+          asp-controller="Client"
+          method="post"
+          id="clientForm"
+          data-validate="true"
+          class="client-form-class"
+          novalidate>
+
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="ClientName">Client Name</label>
+            <div class="input-wrapper">
+                <input asp-for="ClientName"
+                       class="form-control"
+                       placeholder="Client name"
+                       required
+                       data-validate-rule="required"
+                       data-validate-message="Client name is required." />
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+            </div>
+            <span asp-validation-for="ClientName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <div class="input-wrapper">
+                <input asp-for="Email" 
+                       class="form-control" 
+                       placeholder="Client email address" 
+                       data-validate-rule="email"
+                       data-validate-message="Enter a valid email ex. (example@example.ca)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Notes">Notes</label>
+            <div class="input-wrapper">
+                <textarea asp-for="Notes" 
+                          class="form-control" 
+                          placeholder="Additional notes about the client"
+                          rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <button type="button" class="accordion-toggle" data-target="addressesContainer">
+                <i class="fa-solid fa-location-dot"></i> Addresses
+            </button>
+            <div id="addressesContainer" class="accordion-content">
+                <div class="address-actions">
+                    <button type="button" class="btn-add-address" data-type="Home">
+                        <i class="fa-solid fa-plus"></i> Home
+                    </button>
+                    <button type="button" class="btn-add-address" data-type="Work">
+                        <i class="fa-solid fa-plus"></i> Work
+                    </button>
+                    <button type="button" class="btn-add-address" data-type="Other">
+                        <i class="fa-solid fa-plus"></i> Other
+                    </button>
+                </div>
+                <div id="addressesList">
+                    @for (int i = 0; i < Model.Addresses.Count; i++)
+                    {
+                        <div class="address-block" data-type="@Model.Addresses[i].AddressType">
+                            <div class="address-header">
+                                <span class="address-type">@Model.Addresses[i].AddressType</span>
+                                <button type="button" class="btn-remove" onclick="removeThis(this)">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" asp-for="Addresses[@i].Id" />
+                            <input type="hidden" asp-for="Addresses[@i].AddressType" />
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].Address" class="form-control" placeholder="Street Address" required />
+                            </div>
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].ZipCode" class="form-control" placeholder="Zip Code" required />
+                            </div>
+                            <div class="form-row">
+                                <input asp-for="Addresses[@i].City" class="form-control" placeholder="City" required />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button type="button" class="accordion-toggle" data-target="phonesContainer">
+                <i class="fa-solid fa-phone"></i> Phones
+            </button>
+            <div id="phonesContainer" class="accordion-content">
+                <div class="phone-actions">
+                    <button type="button" class="btn-add-phone" data-type="Mobile">
+                        <i class="fa-solid fa-plus"></i> Mobile
+                    </button>
+                    <button type="button" class="btn-add-phone" data-type="Home">
+                        <i class="fa-solid fa-plus"></i> Home
+                    </button>
+                    <button type="button" class="btn-add-phone" data-type="Work">
+                        <i class="fa-solid fa-plus"></i> Work
+                    </button>
+                </div>
+                <div id="phonesList">
+                    @for (int i = 0; i < Model.Phones.Count; i++)
+                    {
+                        <div class="phone-block" data-type="@Model.Phones[i].PhoneType">
+                            <div class="phone-header">
+                                <span class="phone-type">@Model.Phones[i].PhoneType</span>
+                                <button type="button" class="btn-remove" onclick="removeThis(this)">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" asp-for="Phones[@i].Id" />
+                            <input type="hidden" asp-for="Phones[@i].PhoneType" />
+                            <div class="form-row">
+                                <input asp-for="Phones[@i].Phone" class="form-control" placeholder="Phone Number" required />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-client-form">Save</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/client/CreateEditClient.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/client/CreateEditClient.css" asp-append-version="true" />
+} 
